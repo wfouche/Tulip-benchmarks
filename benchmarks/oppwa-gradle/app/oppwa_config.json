@@ -1,13 +1,14 @@
 {
     "actions": {
-        "description": "docs.oppwa.com",
+        "description": "OPPWA Payments",
         "output_filename": "oppwa_output.json",
         "report_filename": "oppwa_report.html",
         "user_class": "io.tulip.OppHttpUser",
         "user_params": {
             "protocol": "https",
             "host": "eu-test.oppwa.com",
-            "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU="
+            "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=",
+            "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         },
         "user_actions": {
             "1": "PA",
@@ -17,7 +18,7 @@
         }
     },
     "workflows": {
-        "payments": {
+        "Payments": {
             "-": {
                 "1": 0.5,
                 "3": 0.5
@@ -54,7 +55,7 @@
                 "benchmark_duration": 30,
                 "benchmark_iterations": 10
             },
-            "scenario_workflow": "payments"
+            "scenario_workflow": "Payments"
         },
         "onStop": {
             "enabled": false,
