@@ -41,8 +41,8 @@ dependencies {
     implementation(libs.tulip.runtime)
     implementation("org.springframework.boot:spring-boot-starter-web:3.4.3")
     implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("ch.qos.logback:logback-core:1.5.17")
-    implementation("ch.qos.logback:logback-classic:1.5.17")
+    implementation("ch.qos.logback:logback-core:1.5.18")
+    implementation("ch.qos.logback:logback-classic:1.5.18")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
