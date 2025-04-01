@@ -2,8 +2,7 @@ package io.tulip
 
 /*-------------------------------------------------------------------------*/
 
-import io.github.wfouche.tulip.api.TulipUser
-import io.github.wfouche.tulip.user.HttpUser
+import io.github.wfouche.tulip.user.RestClientUser
 import io.github.wfouche.tulip.core.Console
 import io.github.wfouche.tulip.core.delayMillisRandom
 //import java.net.URI
@@ -100,7 +99,7 @@ data class CompResponse(
 
 /*-------------------------------------------------------------------------*/
 
-class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
+class OppHttpUser(userId: Int, threadId: Int) : RestClientUser(userId, threadId) {
 
     // ----------------------------------------------------------------- //
 
