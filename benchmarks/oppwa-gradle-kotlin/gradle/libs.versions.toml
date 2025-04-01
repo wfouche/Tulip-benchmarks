@@ -2,12 +2,12 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-guava = "33.4.5-jre"
+guava = "33.4.6-jre"
 junit-jupiter-engine = "5.12.1"
 tulip-runtime = "2.1.7-dev"
 kotlin = "2.1.20"
 kotlin-test-junit5 = "2.1.20"
-kotlinx-serialization-json = "1.8.0"
+kotlinx-serialization-json = "1.8.1"
 clikt-jvm = "5.0.3"
 
 [libraries]
