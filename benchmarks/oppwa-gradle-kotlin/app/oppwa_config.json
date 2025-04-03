@@ -5,8 +5,7 @@
         "report_filename": "oppwa_report.html",
         "user_class": "io.tulip.OppHttpUser",
         "user_params": {
-            "protocol": "https",
-            "host": "eu-test.oppwa.com",
+            "url": "https://eu-test.oppwa.com",
             "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=",
             "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         },
