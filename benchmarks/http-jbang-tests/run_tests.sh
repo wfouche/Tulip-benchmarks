@@ -9,9 +9,9 @@
 # $ echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 #
 # "-XX:+UseLargePages",
-jbang --fresh run tulip-cli@wfouche
+jbang --fresh run tulip-cli-dev@wfouche
 
-export TULIP_PARAMS="10000.0 http localhost:7070 2.1.7-dev"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.7-dev"
 export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
 
 #unset TULIP_JAVA_OPTIONS
@@ -29,7 +29,7 @@ rm -f -r Groovy
 mkdir -p Groovy
 cd Groovy || exit
 echo ""
-jbang run tulip-cli@wfouche init Groovy $TULIP_PARAMS
+jbang run tulip-cli-dev@wfouche init Groovy $TULIP_PARAMS
 
 . ./run_bench.sh
 cd ..
@@ -38,7 +38,7 @@ rm -f -r Kotlin
 mkdir -p Kotlin
 cd Kotlin || exit
 echo ""
-jbang run tulip-cli@wfouche init Kotlin $TULIP_PARAMS
+jbang run tulip-cli-dev@wfouche init Kotlin $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
@@ -46,7 +46,7 @@ rm -f -r Scala
 mkdir -p Scala
 cd Scala || exit
 echo ""
-jbang run tulip-cli@wfouche init Scala $TULIP_PARAMS
+jbang run tulip-cli-dev@wfouche init Scala $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
@@ -54,7 +54,7 @@ rm -f -r Jython
 mkdir -p Jython
 cd Jython || exit
 echo ""
-jbang run tulip-cli@wfouche init Jython $TULIP_PARAMS
+jbang run tulip-cli-dev@wfouche init Jython $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
