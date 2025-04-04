@@ -21,7 +21,7 @@ rm -f -r Java
 mkdir -p Java
 cd Java || exit
 echo ""
-jbang run tulip-cli@wfouche init Java $TULIP_PARAMS
+jbang run tulip-cli-dev@wfouche init Java $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
