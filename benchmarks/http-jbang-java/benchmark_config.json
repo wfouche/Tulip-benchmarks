@@ -5,15 +5,19 @@
         "report_filename": "benchmark_report.html",
         "user_class": "io.tulip.DemoHttpUser",
         "user_params": {
-            "protocol": "http",
-            "host": "localhost:7070",
+            "url": "https://jsonplaceholder.typicode.com",
+            "url2": "http://localhost:7070",
             "connectTimeoutMillis": 500,
             "readTimeoutMillis": 2000
         },
         "user_actions": {
-            "1": "GET:posts",
-            "2": "GET:comments",
-            "3": "GET:todos"
+            "1": "GET:posts/{id}",
+            "2": "GET:comments/{id}",
+            "3": "GET:todos/{id}",
+            "4": "POST:posts",
+            "5": "PUT:posts/{id}",
+            "6": "PATCH:posts/{id}",
+            "7": "DELETE:posts/{id}"
         }
     },
     "workflows": {
@@ -89,6 +93,39 @@
             "enabled": true,
             "aps_rate": 0.0,
             "scenario_workflow": "api-user",
+            "time": {
+                "pre_warmup_duration": 30,
+                "warmup_duration": 10,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 3
+            }
+        },
+        "REST4.all": {
+            "enabled": true,
+            "aps_rate": 0.0,
+            "scenario_actions": [
+                {
+                    "id": 1
+                },
+                {
+                    "id": 2
+                },
+                {
+                    "id": 3
+                },
+                {
+                    "id": 4
+                },
+                {
+                    "id": 5
+                },
+                {
+                    "id": 6
+                },
+                {
+                    "id": 7
+                }
+            ],
             "time": {
                 "pre_warmup_duration": 30,
                 "warmup_duration": 10,
