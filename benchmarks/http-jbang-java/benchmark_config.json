@@ -7,8 +7,8 @@
         "user_params": {
             "url": "https://jsonplaceholder.typicode.com",
             "url2": "http://localhost:7070",
-            "connectTimeoutMillis": 500,
-            "readTimeoutMillis": 2000
+            "connectTimeoutMillis": 2000,
+            "readTimeoutMillis": 10000
         },
         "user_actions": {
             "1": "GET:posts/{id}",
