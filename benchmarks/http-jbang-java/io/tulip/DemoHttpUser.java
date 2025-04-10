@@ -29,25 +29,30 @@ public class DemoHttpUser extends HttpUser {
 
     // Action 4: POST /posts
     public boolean action4() {
-        String body = new String("{\"title\": \"New Title\", \"body\": \"New Body\", \"userId\": 1}");
+        String body = new String(
+            "{\"title\": \"New Title\", \"body\": \"New Body\", \"userId\": 1}");
         return !http_POST(body, "/posts").isEmpty();
     }
 
     // Action 5: PUT /posts/{id}
     public boolean action5() {
-        String body = new String("{\"id\": 1, \"title\": \"New Title\", \"body\": \"New Body\", \"userId\": 1}");
-        return !http_PUT(body, "/posts/1").isEmpty();
+        int id = ThreadLocalRandom.current().nextInt(100)+1;
+        String body = new String(
+            "{\"id\": 1, \"title\": \"New Title\", \"body\": \"New Body\", \"userId\": 1}");
+        return !http_PUT(body, "/posts/{id}", id).isEmpty();
     }
 
     // Action 6: PATCH /posts/{id}
     public boolean action6() {
+        int id = ThreadLocalRandom.current().nextInt(100)+1;
         String body = new String("{\"title\": \"New Title\"}");
-        return !http_PATCH(body, "/posts/1").isEmpty();
+        return !http_PATCH(body, "/posts/{id}", id).isEmpty();
     }
 
     // Action 7: DELETE /posts/{id}
     public boolean action7() {
-        return !http_DELETE("/posts/1").isEmpty();
+        int id = ThreadLocalRandom.current().nextInt(100)+1;
+        return !http_DELETE("/posts/{id}", id).isEmpty();
     }
 
-}    
+}
