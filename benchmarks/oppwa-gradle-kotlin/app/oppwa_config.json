@@ -10,10 +10,10 @@
             "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         },
         "user_actions": {
-            "1": "PA",
-            "2": "CP",
-            "3": "DB",
-            "4": "RF"
+            "1": "PA, Pre-authorize payment",
+            "2": "CP, Capture the payment",
+            "3": "DB, Perform debit payment",
+            "4": "RF, Refund a previous payment"
         }
     },
     "workflows": {
