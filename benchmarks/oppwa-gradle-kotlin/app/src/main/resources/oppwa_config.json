@@ -47,7 +47,6 @@
         "Constant TPS": {
             "enabled": true,
             "aps_rate": 100.0,
-            "worker_thread_queue_size": 0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
@@ -60,7 +59,6 @@
             "enabled": true,
             "aps_rate": 100.0,
             "aps_rate_increment": 10.0,
-            "worker_thread_queue_size": 0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
