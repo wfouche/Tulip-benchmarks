@@ -6,6 +6,7 @@
         "user_class": "io.tulip.OppHttpUser",
         "user_params": {
             "url": "https://eu-test.oppwa.com",
+            "httpVersion": "HTTP_1_1",
             "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=",
             "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         },
@@ -46,24 +47,25 @@
         },
         "Constant TPS": {
             "enabled": true,
-            "aps_rate": 100.0,
+            "aps_rate": 200.0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
                 "benchmark_duration": 30,
-                "benchmark_iterations": 8
+                "benchmark_iterations": 9
             },
             "scenario_workflow": "Payments"
         },
         "Rising TPS": {
             "enabled": true,
-            "aps_rate": 100.0,
-            "aps_rate_increment": 10.0,
+            "aps_rate": 40.0,
+            "aps_rate_step_change": 40.0,
+            "aps_rate_step_count": 3,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
                 "benchmark_duration": 30,
-                "benchmark_iterations": 8
+                "benchmark_iterations": 3
             },
             "scenario_workflow": "Payments"
         },
