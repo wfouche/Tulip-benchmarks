@@ -1,3 +1,3 @@
-./gradlew run --args="--result=oppwa_output.json"
+./gradlew run --args="--result=oppwa_output.json --config=oppwa_config.json"
 
-w3m -dump -cols 200 app/oppwa_report.html
+lynx -dump -width 200 app/build/reports/tulip/oppwa_report.html

@@ -28,11 +28,14 @@ private class TulipCli00 : CliktCommand() {
     private val configOpt by option("--config").default("")
     private val resultOpt by option("--result").default("")
     override fun run() {
-        if (configOpt != "") {
-            TulipApi.runTulip(configOpt)
-        } else if (resultOpt != "") {
+        if (resultOpt != "") {
 	        echo(resultOpt)
-            TulipApi.createHtmlReport(resultOpt,"{}")
+            echo(configOpt)
+            TulipApi.createHtmlReport(resultOpt,configOpt)
+            TulipApi.createConfigReport(configOpt)
+        }
+        else if (configOpt != "") {
+            TulipApi.runTulip(configOpt)
         }
     }
 }
