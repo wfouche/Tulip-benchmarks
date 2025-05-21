@@ -47,7 +47,7 @@
         },
         "Constant TPS": {
             "enabled": true,
-            "aps_rate": 200.0,
+            "aps_rate": 100.0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
