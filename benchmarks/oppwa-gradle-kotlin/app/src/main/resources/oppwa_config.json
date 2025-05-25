@@ -58,7 +58,7 @@
         },
         "Rising TPS": {
             "enabled": true,
-            "aps_rate": 40.0,
+            "aps_rate": 30.0,
             "aps_rate_step_change": 40.0,
             "aps_rate_step_count": 3,
             "time": {
