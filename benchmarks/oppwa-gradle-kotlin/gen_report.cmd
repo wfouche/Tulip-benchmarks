@@ -1,4 +1,4 @@
-call .\gradlew -q run --args="--result oppwa_output.json"
+call .\gradlew -q run --args="--result oppwa_output.json --config=oppwa_config.json"
 @echo off
 echo.
-..\..\platform\msys64\bin\w3m.exe -dump -cols 200 app\oppwa_report.html
+..\..\..\Tulip\platform\msys64\bin\w3m.exe -dump -cols 200 app\build\reports\tulip\oppwa_report.html
