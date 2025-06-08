@@ -9,11 +9,11 @@ call jbang run tulip-cli-dev@wfouche init Java %TULIP_PARAMS%
 call run_bench.cmd
 cd ..
 
-if not exist "Groovy" (md Groovy)
-cd Groovy
-call jbang run tulip-cli-dev@wfouche init Groovy %TULIP_PARAMS%
-call run_bench.cmd
-cd ..
+REM if not exist "Groovy" (md Groovy)
+REM cd Groovy
+REM call jbang run tulip-cli-dev@wfouche init Groovy %TULIP_PARAMS%
+REM call run_bench.cmd
+REM cd ..
 
 if not exist "Kotlin" (md Kotlin)
 cd Kotlin
