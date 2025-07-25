@@ -3,7 +3,10 @@
 
 import org.jpos.iso.*;
 import org.jpos.iso.channel.ASCIIChannel;
+import org.jpos.iso.channel.PostChannel;
 import org.jpos.iso.packager.GenericPackager;
+import org.jpos.iso.packager.PostPackager;
+
 import java.io.IOException;
 
 public class TestClient {
@@ -12,7 +15,7 @@ public class TestClient {
         try {
             // 1. Define the ISO 8583 Message Structure (Packager)
             // Ensure iso8583.xml is in your classpath or provide the full path
-            ISOPackager packager = new GenericPackager();
+            ISOPackager packager = new PostPackager(); //("postpack.xml");
 
             // 2. Create the ISO 8583 Message
             ISOMsg isoMsg = new ISOMsg();
@@ -25,7 +28,7 @@ public class TestClient {
             // 3. Establish a Communication Channel
             String hostname = "localhost"; // Replace with your server's IP/hostname
             int port = 8000; // Replace with your server's port
-            ASCIIChannel channel = new ASCIIChannel(hostname, port, packager);
+            PostChannel channel = new PostChannel(hostname, port, packager);
 
             // 4. Send the Message
             channel.connect();

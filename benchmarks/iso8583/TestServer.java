@@ -39,7 +39,7 @@ public class TestServer implements ISORequestListener {
 
 	public boolean process(ISOSource source, ISOMsg msg) {
 		try {
-			// jLogger.info( "Received msg=" + msg );
+			//jLogger.info( "Received msg=" + msg );
 			msg.setResponseMTI();
 			msg.set(39, "00");
 			source.send(msg);
@@ -54,7 +54,7 @@ public class TestServer implements ISORequestListener {
 	public static void main(String[] args) throws Exception {
 		Logger logger = new Logger(); // org.jpos.util
 		logger.addListener(new SimpleLogListener(System.out));
-		ServerChannel channel = new XMLChannel(new XMLPackager());
+		ServerChannel channel = new PostChannel(new PostPackager());
 		((LogSource) channel).setLogger(logger, "channel");
 		ISOServer server = new ISOServer(8000, channel, null);
 		server.setLogger(logger, "server");
