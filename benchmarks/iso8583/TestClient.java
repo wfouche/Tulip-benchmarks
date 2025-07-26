@@ -1,3 +1,5 @@
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
 //DEPS org.jpos:jpos:2.1.10
 //JAVA 21
 
