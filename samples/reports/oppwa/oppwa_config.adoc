@@ -1,0 +1,341 @@
+= OPPWA Payments
+:toc: left
+:sectnums:
+:source-highlighter: rouge
+
+// :source-highlighter: highlight.js
+// :plantuml: http://localhost:8080/plantuml
+// :plantuml-fetch-diagram: true
+// :plantuml-size-limit: 8192
+// :plantuml: plantuml.com/plantuml
+// :diagram-server-url: https://kroki.io/
+// :diagram-server-type: kroki_io
+
+++++
+<style>
+/* CSS block for styling the main content area */
+#content {
+    max-width: 1140px; /* Set your desired maximum width */
+    margin: 0 auto;  /* Center the content */
+    padding: 0 1em; /* Add some horizontal padding */
+}
+/* You can also target other elements like header or footer */
+#header, #footer {
+    max-width: 1140px; /* Apply the same max-width to header and footer */
+    margin: 0 auto;
+}
+</style>
+++++
+
+Filename::
+  src/main/resources/oppwa_config.json
+
+== Actions
+
+=== Configuration
+
+[%header,cols="1a,4a"]
+|===
+| id | value
+| *description*
+| OPPWA Payments
+| *output_filename*
+| oppwa_output.json
+| *report_filename*
+| oppwa_report.html
+| *user_class*
+| io.tulip.OppHttpUser
+| *user_params*
+|
+[%header,cols="1a,3a"]
+!===
+! id ! value 
+! *url* ! https://eu-test.oppwa.com
+! *httpVersion* ! HTTP_1_1
+! *token* ! OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=
+! *apiDocs* ! https://docs.oppwa.com/integrations/server-to-server
+!===
+| *user_actions*
+|
+[%header,cols="2a,2a,4a"]
+!===
+! id ! value ! description
+! *1* ! PA! Pre-authorize payment
+! *2* ! CP! Capture the payment
+! *3* ! DB! Perform debit payment
+! *4* ! RF! Refund a previous payment
+!===
+|===
+
+== Workflows 
+
+[[Payments]]
+=== Payments
+
+[%header,cols="1a,1a"]
+|===
+| Workflow Diagram | Specification
+|[plantuml,wfd0,svg]
+----
+@startuml
+state "-" as A0
+state "Action 1" as A1
+A1: <PA>
+
+state "Action 2" as A2
+A2: <CP>
+
+state "Action 3" as A3
+A3: <DB>
+
+state "Action 4" as A4
+A4: <RF>
+
+A0 --> A1: 0.50
+A0 --> A3: 0.50
+A1 --> A2: 1.00
+A2 --> A4: 0.20
+A2 --> A0: 0.80
+A3 --> A4: 0.20
+A3 --> A0: 0.80
+A4 --> A0: 1.00
+@enduml
+----
+| 
+[source,json]
+----
+{
+    "-": {
+        "1": 0.5, 
+        "3": 0.5
+    }, 
+    "1": {
+        "2": 1.0
+    }, 
+    "2": {
+        "4": 0.2, 
+        "-": 0.8
+    }, 
+    "3": {
+        "4": 0.2, 
+        "-": 0.8
+    }, 
+    "4": {
+        "-": 1.0
+    }
+}
+----
+|===
+
+== Contexts
+
+=== Context-1
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | True
+| *num_users*   | 100
+| *num_threads* | 100
+|===
+=== Context-2
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | False
+| *num_users*   | 16
+| *num_threads* | 16
+|===
+
+== Benchmarks
+
+=== onStart
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 0
+! - 
+!===
+|===
+
+=== Constant TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 100.0
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<Payments>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 9
+!===
+|===
+
+=== Rising TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 30.0
+| *aps_rate_step_change* | 40.0
+| *aps_rate_step_count* | 3
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<Payments>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== onStop
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | False
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 100
+! - 
+!===
+|===
+
+== JSON Configuration File
+
+[source,json,linenums]
+----
+{
+    "actions": {
+        "description": "OPPWA Payments", 
+        "output_filename": "oppwa_output.json", 
+        "report_filename": "oppwa_report.html", 
+        "user_class": "io.tulip.OppHttpUser", 
+        "user_params": {
+            "url": "https://eu-test.oppwa.com", 
+            "httpVersion": "HTTP_1_1", 
+            "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=", 
+            "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
+        }, 
+        "user_actions": {
+            "1": "PA, Pre-authorize payment", 
+            "2": "CP, Capture the payment", 
+            "3": "DB, Perform debit payment", 
+            "4": "RF, Refund a previous payment"
+        }
+    }, 
+    "workflows": {
+        "Payments": {
+            "-": {
+                "1": 0.5, 
+                "3": 0.5
+            }, 
+            "1": {
+                "2": 1.0
+            }, 
+            "2": {
+                "4": 0.2, 
+                "-": 0.8
+            }, 
+            "3": {
+                "4": 0.2, 
+                "-": 0.8
+            }, 
+            "4": {
+                "-": 1.0
+            }
+        }
+    }, 
+    "benchmarks": {
+        "onStart": {
+            "enabled": true, 
+            "save_stats": false, 
+            "scenario_actions": [
+                {
+                    "id": 0
+                }
+            ]
+        }, 
+        "Constant TPS": {
+            "enabled": true, 
+            "aps_rate": 100.0, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 9
+            }, 
+            "scenario_workflow": "Payments"
+        }, 
+        "Rising TPS": {
+            "enabled": true, 
+            "aps_rate": 30.0, 
+            "aps_rate_step_change": 40.0, 
+            "aps_rate_step_count": 3, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "scenario_workflow": "Payments"
+        }, 
+        "onStop": {
+            "enabled": false, 
+            "save_stats": false, 
+            "scenario_actions": [
+                {
+                    "id": 100
+                }
+            ]
+        }
+    }, 
+    "contexts": {
+        "Context-1": {
+            "enabled": true, 
+            "num_users": 100, 
+            "num_threads": 100
+        }, 
+        "Context-2": {
+            "enabled": false, 
+            "num_users": 16, 
+            "num_threads": 16
+        }
+    }
+}
+----
