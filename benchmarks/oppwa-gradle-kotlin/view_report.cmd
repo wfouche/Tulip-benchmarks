@@ -1,1 +1,1 @@
-firefox app\build\reports\tulip\oppwa_report.html
+start app\build\reports\tulip\oppwa_report.html
