@@ -1,8 +1,10 @@
 {
+  "config": {
+
+  },
   "benchmarks": [
     {
       "name": "Constant TPS",
-      "config": {},
       "results": [
         {
           "id": 1,
