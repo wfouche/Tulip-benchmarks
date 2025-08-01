@@ -1,0 +1,48 @@
+{
+  "config": {
+
+  },
+  "benchmarks": [
+    {
+      "name": "Constant TPS",
+      "results": [
+        {
+          "id": 1,
+          "stats": {}
+        },
+        {
+          "id": 2,
+          "stats": {}
+        },
+        {
+          "id": 3,
+          "stats": {}
+        }
+      ],
+      "actions": [
+        {
+          "id": 1,
+          "actionId": 3,
+          "name": "Pre-auth",
+          "stats": {}
+        },
+        {
+          "id": 2,
+          "name": "Completion",
+          "stats": {}
+        },
+        {
+          "id": 3,
+          "name": "Debit",
+          "stats": {}
+        }
+      ],
+      "summary": [
+        {
+          "id": 1,
+          "stats": {}
+        }
+      ]
+    }
+  ]
+}
