@@ -4,7 +4,7 @@
 [versions]
 guava = "33.4.8-jre"
 junit-jupiter-engine = "5.13.0"
-tulip-runtime = "2.1.8-dev"
+tulip-runtime = "2.1.8"
 kotlin = "2.1.21"
 kotlin-test-junit5 = "2.1.21"
 kotlinx-serialization-json = "1.8.1"
