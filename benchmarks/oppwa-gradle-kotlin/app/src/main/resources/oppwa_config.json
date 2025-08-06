@@ -59,8 +59,8 @@
         "Rising TPS": {
             "enabled": true,
             "aps_rate": 30.0,
-            "aps_rate_step_change": 40.0,
-            "aps_rate_step_count": 3,
+            "aps_step_change": 40.0,
+            "aps_step_count": 3,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 15,
