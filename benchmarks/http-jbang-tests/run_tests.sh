@@ -1,5 +1,7 @@
 #!/bin/bash
 
+jbang cache clear
+
 # Create a 2 GB regions of Large Pages
 #
 # $ ls /sys/kernel/mm/hugepages/
@@ -11,7 +13,7 @@
 # "-XX:+UseLargePages",
 jbang --fresh run tulip-cli-dev@wfouche
 
-export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.8-dev"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.8"
 export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
 
 #unset TULIP_JAVA_OPTIONS
