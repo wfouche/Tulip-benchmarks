@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+table, th, td {
+  border:1px solid black; font-size:16px; text-align: center;
+}
+th:nth-child(n+14) {
+    background-color: #E5E4E2;
+}
+td:nth-child(n+14) {
+    background-color: #E5E4E2;
+}
+</style>
+
+<body>
+
+<h2><a href="https://wfouche.github.io/Tulip-docs">Tulip 2.1.8</a> / <a href='benchmark_config.html'>Spring RestClient Benchmark [Jython]</a> / 2025-08-08_00:41</h2>
+
+<table style="width:100%">
+  <tr>
+    <th>Benchmark</th>
+    <th>Run Id</th>
+    <th>#N</th>
+    <th>#F</th>
+    <th>Duration</th>
+    <th>Aps</th>
+    <th>Avg_Rt</th>
+    <th>Stdev</th>
+    <th>Min_Rt</th>
+    <th>90p_Rt</th>
+    <th>99p_Rt</th>
+    <th>Max_Rt</th>
+    <th>Max_Rtt</th>
+    <th>AQS</th>
+    <th>MQS</th>
+    <th>AWT</th>
+    <th>MWT</th>
+    <th>CPU_T</th>
+    <th>CPU</th>
+    <th>MEM</th>
+  </tr>
+
+  <tr>
+    <td><a href='benchmark_config.html#_rest1'>REST1</a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>u:128, t:8</td>
+    <td>1</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.193 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.9 ms</td>
+    <td>08_00:41:28</td>
+    <td>1.4</td>
+    <td>11</td>
+    <td>0.1</td>
+    <td>3.0</td>
+    <td>0:00:50.5</td>
+    <td>168.5</td>
+    <td>37.3</td>
+  </tr>
+
+  <tr>
+    <td>c:0</td>
+    <td>2</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.193 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.7 ms</td>
+    <td>08_00:41:47</td>
+    <td>1.4</td>
+    <td>11</td>
+    <td>0.1</td>
+    <td>2.6</td>
+    <td>0:00:50.7</td>
+    <td>169.3</td>
+    <td>89.6</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td>3</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.193 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.8 ms</td>
+    <td>08_00:42:28</td>
+    <td>1.4</td>
+    <td>11</td>
+    <td>0.1</td>
+    <td>2.8</td>
+    <td>0:00:51.3</td>
+    <td>171.2</td>
+    <td>37.8</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_1_0.html'>[1.GET:posts]</a></td>
+    <td><b>900000</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>10000.000</b></td>
+    <td><b>0.193 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.9 ms</b></td>
+    <td><b>08_00:41:28</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>3.0</b></td>
+    <td><b>0:02:32.7</b></td>
+    <td><b>171.2</b></td>
+    <td><b>89.6</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_1.html'>[Summary]</a></td>
+    <td><b>900000</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>10000.000</b></td>
+    <td><b>0.193 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.9 ms</b></td>
+    <td><b>08_00:41:28</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>3.0</b></td>
+    <td><b>0:02:32.7</b></td>
+    <td><b>171.2</b></td>
+    <td><b>89.6</b></td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr>
+    <th>Benchmark</th>
+    <th>Run Id</th>
+    <th>#N</th>
+    <th>#F</th>
+    <th>Duration</th>
+    <th>Aps</th>
+    <th>Avg_Rt</th>
+    <th>Stdev</th>
+    <th>Min_Rt</th>
+    <th>90p_Rt</th>
+    <th>99p_Rt</th>
+    <th>Max_Rt</th>
+    <th>Max_Rtt</th>
+    <th>AQS</th>
+    <th>MQS</th>
+    <th>AWT</th>
+    <th>MWT</th>
+    <th>CPU_T</th>
+    <th>CPU</th>
+    <th>MEM</th>
+  </tr>
+
+  <tr>
+    <td><a href='benchmark_config.html#_rest2'>REST2</a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>u:128, t:8</td>
+    <td>1</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.194 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>2.0 ms</td>
+    <td>08_00:43:27</td>
+    <td>1.4</td>
+    <td>8</td>
+    <td>0.1</td>
+    <td>2.3</td>
+    <td>0:00:50.3</td>
+    <td>167.8</td>
+    <td>78.0</td>
+  </tr>
+
+  <tr>
+    <td>c:0</td>
+    <td>2</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.194 ms</td>
+    <td>0.1 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>24.0 ms</td>
+    <td>08_00:43:56</td>
+    <td>1.4</td>
+    <td>11</td>
+    <td>0.1</td>
+    <td>24.7</td>
+    <td>0:00:50.0</td>
+    <td>166.8</td>
+    <td>11.2</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td>3</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.195 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.9 ms</td>
+    <td>08_00:44:26</td>
+    <td>1.4</td>
+    <td>11</td>
+    <td>0.1</td>
+    <td>4.4</td>
+    <td>0:00:47.9</td>
+    <td>159.8</td>
+    <td>37.6</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_2_0.html'>[1.GET:posts]</a></td>
+    <td><b>90003</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>1000.033</b></td>
+    <td><b>0.193 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.7 ms</b></td>
+    <td><b>08_00:43:28</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>24.7</b></td>
+    <td><b>0:02:28.3</b></td>
+    <td><b>167.8</b></td>
+    <td><b>78.0</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_2_1.html'>[2.GET:comments]</a></td>
+    <td><b>360005</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>4000.056</b></td>
+    <td><b>0.194 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>23.4 ms</b></td>
+    <td><b>08_00:43:56</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>24.7</b></td>
+    <td><b>0:02:28.3</b></td>
+    <td><b>167.8</b></td>
+    <td><b>78.0</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_2_2.html'>[3.GET:todos]</a></td>
+    <td><b>449992</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>4999.911</b></td>
+    <td><b>0.195 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>24.0 ms</b></td>
+    <td><b>08_00:43:56</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>24.7</b></td>
+    <td><b>0:02:28.3</b></td>
+    <td><b>167.8</b></td>
+    <td><b>78.0</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_2.html'>[Summary]</a></td>
+    <td><b>900000</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>10000.000</b></td>
+    <td><b>0.195 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>24.0 ms</b></td>
+    <td><b>08_00:43:56</b></td>
+    <td><b>1.4</b></td>
+    <td><b>11</b></td>
+    <td><b>0.1</b></td>
+    <td><b>24.7</b></td>
+    <td><b>0:02:28.3</b></td>
+    <td><b>167.8</b></td>
+    <td><b>78.0</b></td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr>
+    <th>Benchmark</th>
+    <th>Run Id</th>
+    <th>#N</th>
+    <th>#F</th>
+    <th>Duration</th>
+    <th>Aps</th>
+    <th>Avg_Rt</th>
+    <th>Stdev</th>
+    <th>Min_Rt</th>
+    <th>90p_Rt</th>
+    <th>99p_Rt</th>
+    <th>Max_Rt</th>
+    <th>Max_Rtt</th>
+    <th>AQS</th>
+    <th>MQS</th>
+    <th>AWT</th>
+    <th>MWT</th>
+    <th>CPU_T</th>
+    <th>CPU</th>
+    <th>MEM</th>
+  </tr>
+
+  <tr>
+    <td><a href='benchmark_config.html#_rest3'>REST3</a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>u:128, t:8</td>
+    <td>1</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.193 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.9 ms</td>
+    <td>08_00:45:37</td>
+    <td>1.4</td>
+    <td>8</td>
+    <td>0.1</td>
+    <td>2.3</td>
+    <td>0:00:48.8</td>
+    <td>162.8</td>
+    <td>32.8</td>
+  </tr>
+
+  <tr>
+    <td>w:ApiUser</td>
+    <td>2</td>
+    <td>299998</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>9999.933</td>
+    <td>0.194 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>2.1 ms</td>
+    <td>08_00:46:06</td>
+    <td>1.4</td>
+    <td>8</td>
+    <td>0.1</td>
+    <td>2.6</td>
+    <td>0:00:50.9</td>
+    <td>169.9</td>
+    <td>58.1</td>
+  </tr>
+
+  <tr>
+    <td>c:0</td>
+    <td>3</td>
+    <td>300000</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>10000.000</td>
+    <td>0.195 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.3 ms</td>
+    <td>0.3 ms</td>
+    <td>1.9 ms</td>
+    <td>08_00:46:37</td>
+    <td>1.4</td>
+    <td>8</td>
+    <td>0.1</td>
+    <td>2.4</td>
+    <td>0:00:51.1</td>
+    <td>170.6</td>
+    <td>22.1</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_3_0.html'>[1.GET:posts]</a></td>
+    <td><b>257317</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>2859.078</b></td>
+    <td><b>0.193 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>2.0 ms</b></td>
+    <td><b>08_00:46:06</b></td>
+    <td><b>1.4</b></td>
+    <td><b>8</b></td>
+    <td><b>0.1</b></td>
+    <td><b>2.6</b></td>
+    <td><b>0:02:30.9</b></td>
+    <td><b>170.6</b></td>
+    <td><b>58.1</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_3_1.html'>[2.GET:comments]</a></td>
+    <td><b>257325</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>2859.167</b></td>
+    <td><b>0.194 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.9 ms</b></td>
+    <td><b>08_00:46:06</b></td>
+    <td><b>1.4</b></td>
+    <td><b>8</b></td>
+    <td><b>0.1</b></td>
+    <td><b>2.6</b></td>
+    <td><b>0:02:30.9</b></td>
+    <td><b>170.6</b></td>
+    <td><b>58.1</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_3_2.html'>[3.GET:todos]</a></td>
+    <td><b>385356</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>4281.733</b></td>
+    <td><b>0.195 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>2.1 ms</b></td>
+    <td><b>08_00:46:06</b></td>
+    <td><b>1.4</b></td>
+    <td><b>8</b></td>
+    <td><b>0.1</b></td>
+    <td><b>2.6</b></td>
+    <td><b>0:02:30.9</b></td>
+    <td><b>170.6</b></td>
+    <td><b>58.1</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_3.html'>[Summary]</a></td>
+    <td><b>899998</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>9999.978</b></td>
+    <td><b>0.194 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>2.1 ms</b></td>
+    <td><b>08_00:46:06</b></td>
+    <td><b>1.4</b></td>
+    <td><b>8</b></td>
+    <td><b>0.1</b></td>
+    <td><b>2.6</b></td>
+    <td><b>0:02:30.9</b></td>
+    <td><b>170.6</b></td>
+    <td><b>58.1</b></td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr>
+    <th>Benchmark</th>
+    <th>Run Id</th>
+    <th>#N</th>
+    <th>#F</th>
+    <th>Duration</th>
+    <th>Aps</th>
+    <th>Avg_Rt</th>
+    <th>Stdev</th>
+    <th>Min_Rt</th>
+    <th>90p_Rt</th>
+    <th>99p_Rt</th>
+    <th>Max_Rt</th>
+    <th>Max_Rtt</th>
+    <th>AQS</th>
+    <th>MQS</th>
+    <th>AWT</th>
+    <th>MWT</th>
+    <th>CPU_T</th>
+    <th>CPU</th>
+    <th>MEM</th>
+  </tr>
+
+  <tr>
+    <td><a href='benchmark_config.html#_rest3_max'>REST3.max</a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>u:128, t:8</td>
+    <td>1</td>
+    <td>1244805</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>41493.500</td>
+    <td>0.170 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.2 ms</td>
+    <td>0.3 ms</td>
+    <td>1.7 ms</td>
+    <td>08_00:47:46</td>
+    <td>5.6</td>
+    <td>11</td>
+    <td>0.9</td>
+    <td>4.6</td>
+    <td>0:02:46.9</td>
+    <td>556.6</td>
+    <td>52.3</td>
+  </tr>
+
+  <tr>
+    <td>w:ApiUser</td>
+    <td>2</td>
+    <td>1254810</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>41827.000</td>
+    <td>0.169 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.2 ms</td>
+    <td>0.3 ms</td>
+    <td>1.8 ms</td>
+    <td>08_00:48:16</td>
+    <td>5.6</td>
+    <td>11</td>
+    <td>0.9</td>
+    <td>4.5</td>
+    <td>0:02:45.9</td>
+    <td>553.1</td>
+    <td>39.4</td>
+  </tr>
+
+  <tr>
+    <td>c:0</td>
+    <td>3</td>
+    <td>1257857</td>
+    <td>0</td>
+    <td>0:00:30</td>
+    <td>41928.567</td>
+    <td>0.169 ms</td>
+    <td>0.0 ms</td>
+    <td>0.1 ms</td>
+    <td>0.2 ms</td>
+    <td>0.3 ms</td>
+    <td>2.0 ms</td>
+    <td>08_00:48:46</td>
+    <td>5.6</td>
+    <td>11</td>
+    <td>0.9</td>
+    <td>4.3</td>
+    <td>0:02:47.7</td>
+    <td>559.1</td>
+    <td>47.6</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_4_0.html'>[1.GET:posts]</a></td>
+    <td><b>1074445</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>11938.278</b></td>
+    <td><b>0.169 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.2 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.8 ms</b></td>
+    <td><b>08_00:48:16</b></td>
+    <td><b>5.6</b></td>
+    <td><b>11</b></td>
+    <td><b>0.9</b></td>
+    <td><b>4.6</b></td>
+    <td><b>0:08:20.6</b></td>
+    <td><b>559.1</b></td>
+    <td><b>52.3</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_4_1.html'>[2.GET:comments]</a></td>
+    <td><b>1074444</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>11938.267</b></td>
+    <td><b>0.170 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.2 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>1.6 ms</b></td>
+    <td><b>08_00:47:47</b></td>
+    <td><b>5.6</b></td>
+    <td><b>11</b></td>
+    <td><b>0.9</b></td>
+    <td><b>4.6</b></td>
+    <td><b>0:08:20.6</b></td>
+    <td><b>559.1</b></td>
+    <td><b>52.3</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_4_2.html'>[3.GET:todos]</a></td>
+    <td><b>1608583</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>17873.144</b></td>
+    <td><b>0.170 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.2 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>2.0 ms</b></td>
+    <td><b>08_00:48:46</b></td>
+    <td><b>5.6</b></td>
+    <td><b>11</b></td>
+    <td><b>0.9</b></td>
+    <td><b>4.6</b></td>
+    <td><b>0:08:20.6</b></td>
+    <td><b>559.1</b></td>
+    <td><b>52.3</b></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><a href='benchmark_report/benchmark_report_4.html'>[Summary]</a></td>
+    <td><b>3757472</b></td>
+    <td><b>0</b></td>
+    <td><b>0:01:30</b></td>
+    <td><b>41749.689</b></td>
+    <td><b>0.170 ms</b></td>
+    <td><b>0.0 ms</b></td>
+    <td><b>0.1 ms</b></td>
+    <td><b>0.2 ms</b></td>
+    <td><b>0.3 ms</b></td>
+    <td><b>2.0 ms</b></td>
+    <td><b>08_00:48:46</b></td>
+    <td><b>5.6</b></td>
+    <td><b>11</b></td>
+    <td><b>0.9</b></td>
+    <td><b>4.6</b></td>
+    <td><b>0:08:20.6</b></td>
+    <td><b>559.1</b></td>
+    <td><b>52.3</b></td>
+  </tr>
+
+</table>
+</body>
+</html>
