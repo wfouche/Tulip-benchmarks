@@ -1,0 +1,21 @@
+{
+  "name": "scala-cli",
+  "argv": [
+    "/home/wfouche/.sdkman/candidates/scalacli/1.8.5/bin/scala-cli",
+    "bsp",
+    "--json-options",
+    "/home/wfouche/IdeaProjects/Tulip-benchmarks/benchmarks/http-jbang-tests/Scala/io/tulip/.scala-build/ide-options-v2.json",
+    "--json-launcher-options",
+    "/home/wfouche/IdeaProjects/Tulip-benchmarks/benchmarks/http-jbang-tests/Scala/io/tulip/.scala-build/ide-launcher-options.json",
+    "--envs-file",
+    "/home/wfouche/IdeaProjects/Tulip-benchmarks/benchmarks/http-jbang-tests/Scala/io/tulip/.scala-build/ide-envs.json",
+    "/home/wfouche/IdeaProjects/Tulip-benchmarks/benchmarks/http-jbang-tests/Scala/io/tulip/App.scala",
+    "/home/wfouche/IdeaProjects/Tulip-benchmarks/benchmarks/http-jbang-tests/Scala/io/tulip/ScalaHttpUser.scala"
+  ],
+  "version": "1.8.5",
+  "bspVersion": "2.1.1",
+  "languages": [
+    "scala",
+    "java"
+  ]
+}
