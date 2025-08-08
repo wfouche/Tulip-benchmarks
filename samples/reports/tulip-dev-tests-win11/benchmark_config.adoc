@@ -1,0 +1,611 @@
+= Micro-benchmarks
+:toc: left
+:sectnums:
+:source-highlighter: rouge
+
+// :source-highlighter: highlight.js
+// :plantuml: http://localhost:8080/plantuml
+// :plantuml-fetch-diagram: true
+// :plantuml-size-limit: 8192
+// :plantuml: plantuml.com/plantuml
+// :diagram-server-url: https://kroki.io/
+// :diagram-server-type: kroki_io
+
+++++
+<style>
+/* CSS block for styling the main content area */
+#content {
+    max-width: 1140px; /* Set your desired maximum width */
+    margin: 0 auto;  /* Center the content */
+    padding: 0 1em; /* Add some horizontal padding */
+}
+/* You can also target other elements like header or footer */
+#header, #footer {
+    max-width: 1140px; /* Apply the same max-width to header and footer */
+    margin: 0 auto;
+}
+</style>
+++++
+
+Filename::
+  benchmark_config.jsonc
+
+== Actions
+
+=== Configuration
+
+[%header,cols="1a,4a"]
+|===
+| id | value
+| *description*
+| Micro-benchmarks
+| *output_filename*
+| benchmark_output.json
+| *report_filename*
+| benchmark_report.html
+| *user_class*
+| org.example.user.HttpUser
+| *user_params*
+|
+[%header,cols="1a,3a"]
+!===
+! id ! value 
+! *url* ! http://localhost:7070
+! *debug* ! False
+! *http_port* ! 7070
+!===
+| *user_actions*
+|
+[%header,cols="2a,2a,4a"]
+!===
+! id ! value ! description
+! *0* ! onStart! 
+! *1* ! DELAY-6ms! 
+! *2* ! DELAY-14ms! 
+! *3* ! r/posts! 
+! *4* ! r/comments! 
+! *5* ! r/albums! 
+! *6* ! r/photos! 
+! *7* ! r/todos! 
+! *8* ! Nop1! 
+! *9* ! Nop2! 
+! *10* ! DELAY-10ms! 
+! *100* ! onStop! 
+!===
+|===
+
+== Workflows 
+
+[[max-tps]]
+=== max-tps
+
+[%header,cols="1a,1a"]
+|===
+| Workflow Diagram | Specification
+|[plantuml,wfd0,svg]
+----
+@startuml
+state "-" as A0
+state "Action 8" as A8
+A8: <Nop1>
+
+state "Action 9" as A9
+A9: <Nop2>
+
+A0 --> A8: 0.50
+A0 --> A9: 0.50
+A8 --> A0: 1.00
+A9 --> A0: 1.00
+@enduml
+----
+| 
+[source,json]
+----
+{
+    "-": {
+        "8": 0.5, 
+        "9": 0.5
+    }, 
+    "8": {
+        "-": 1.0
+    }, 
+    "9": {
+        "-": 1.0
+    }
+}
+----
+|===
+
+[[random]]
+=== random
+
+[%header,cols="1a,1a"]
+|===
+| Workflow Diagram | Specification
+|[plantuml,wfd1,svg]
+----
+@startuml
+state "-" as A0
+state "Action 1" as A1
+A1: <DELAY-6ms>
+
+state "Action 2" as A2
+A2: <DELAY-14ms>
+
+A0 --> A1: 0.25
+A0 --> A2: 0.75
+A1 --> A0: 1.00
+A2 --> A0: 1.00
+@enduml
+----
+| 
+[source,json]
+----
+{
+    "-": {
+        "1": 0.25, 
+        "2": 0.75
+    }, 
+    "1": {
+        "-": 1.0
+    }, 
+    "2": {
+        "-": 1.0
+    }
+}
+----
+|===
+
+[[http]]
+=== http
+
+[%header,cols="1a,1a"]
+|===
+| Workflow Diagram | Specification
+|[plantuml,wfd2,svg]
+----
+@startuml
+state "-" as A0
+state "Action 3" as A3
+A3: <r/posts>
+
+state "Action 4" as A4
+A4: <r/comments>
+
+state "Action 5" as A5
+A5: <r/albums>
+
+state "Action 6" as A6
+A6: <r/photos>
+
+state "Action 7" as A7
+A7: <r/todos>
+
+A0 --> A3: 1.00
+A3 --> A4: 1.00
+A4 --> A5: 1.00
+A5 --> A6: 1.00
+A6 --> A7: 1.00
+A7 --> A0: 1.00
+@enduml
+----
+| 
+[source,json]
+----
+{
+    "-": {
+        "3": 1.0
+    }, 
+    "3": {
+        "4": 1.0
+    }, 
+    "4": {
+        "5": 1.0
+    }, 
+    "5": {
+        "6": 1.0
+    }, 
+    "6": {
+        "7": 1.0
+    }, 
+    "7": {
+        "-": 1.0
+    }
+}
+----
+|===
+
+== Contexts
+
+=== Context-0
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | True
+| *num_users*   | 16
+| *num_threads* | 2
+|===
+=== Context-1
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | False
+| *num_users*   | 32
+| *num_threads* | 4
+|===
+
+== Benchmarks
+
+=== onStart
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 0
+! - 
+!===
+|===
+
+=== Max TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<max-tps>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 30 seconds
+! *benchmark_duration*
+! 60 seconds
+! *benchmark_iterations*
+! 4
+!===
+|===
+
+=== 1m TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 1000000.0
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<max-tps>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 30 seconds
+! *benchmark_duration*
+! 60 seconds
+! *benchmark_iterations*
+! 4
+!===
+|===
+
+=== 100 TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 100.0
+| *worker_thread_queue_size* | 1
+| *scenario_workflow* | <<random>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 4
+!===
+|===
+
+=== 50 TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 50.0
+| *worker_thread_queue_size* | 1
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 10
+! - 
+!===
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 4
+!===
+|===
+
+=== HTTP Max TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<http>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== HTTP 1250 TPS
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 1250.0
+| *worker_thread_queue_size* | 0
+| *scenario_workflow* | <<http>>
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 15 seconds
+! *warmup_duration*
+! 15 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== onStop
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 100
+! - 
+!===
+|===
+
+== JSON Configuration File
+
+[source,json,linenums]
+----
+{
+    "actions": {
+        "description": "Micro-benchmarks", 
+        "output_filename": "benchmark_output.json", 
+        "report_filename": "benchmark_report.html", 
+        "user_class": "org.example.user.HttpUser", 
+        "user_params": {
+            "url": "http://localhost:7070", 
+            "debug": false, 
+            "http_port": 7070
+        }, 
+        "user_actions": {
+            "0": "onStart", 
+            "1": "DELAY-6ms", 
+            "2": "DELAY-14ms", 
+            "3": "r/posts", 
+            "4": "r/comments", 
+            "5": "r/albums", 
+            "6": "r/photos", 
+            "7": "r/todos", 
+            "8": "Nop1", 
+            "9": "Nop2", 
+            "10": "DELAY-10ms", 
+            "100": "onStop"
+        }
+    }, 
+    "contexts": {
+        "Context-0": {
+            "enabled": true, 
+            "num_users": 16, 
+            "num_threads": 2
+        }, 
+        "Context-1": {
+            "enabled": false, 
+            "num_users": 32, 
+            "num_threads": 4
+        }
+    }, 
+    "benchmarks": {
+        "onStart": {
+            "enabled": true, 
+            "scenario_actions": [
+                {
+                    "id": 0
+                }
+            ]
+        }, 
+        "Max TPS": {
+            "enabled": true, 
+            "aps_rate": 0.0, 
+            "worker_thread_queue_size": 0, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 30, 
+                "benchmark_duration": 60, 
+                "benchmark_iterations": 4
+            }, 
+            "scenario_workflow": "max-tps"
+        }, 
+        "1m TPS": {
+            "enabled": true, 
+            "aps_rate": 1000000.0, 
+            "worker_thread_queue_size": 0, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 30, 
+                "benchmark_duration": 60, 
+                "benchmark_iterations": 4
+            }, 
+            "scenario_workflow": "max-tps"
+        }, 
+        "100 TPS": {
+            "enabled": true, 
+            "aps_rate": 100.0, 
+            "worker_thread_queue_size": 1, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 4
+            }, 
+            "scenario_workflow": "random"
+        }, 
+        "50 TPS": {
+            "enabled": true, 
+            "aps_rate": 50.0, 
+            "worker_thread_queue_size": 1, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 4
+            }, 
+            "scenario_actions": [
+                {
+                    "id": 10
+                }
+            ]
+        }, 
+        "HTTP Max TPS": {
+            "enabled": true, 
+            "aps_rate": 0.0, 
+            "worker_thread_queue_size": 0, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "scenario_workflow": "http"
+        }, 
+        "HTTP 1250 TPS": {
+            "enabled": true, 
+            "aps_rate": 1250.0, 
+            "worker_thread_queue_size": 0, 
+            "time": {
+                "pre_warmup_duration": 15, 
+                "warmup_duration": 15, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "scenario_workflow": "http"
+        }, 
+        "onStop": {
+            "enabled": true, 
+            "scenario_actions": [
+                {
+                    "id": 100
+                }
+            ]
+        }
+    }, 
+    "workflows": {
+        "max-tps": {
+            "-": {
+                "8": 0.5, 
+                "9": 0.5
+            }, 
+            "8": {
+                "-": 1.0
+            }, 
+            "9": {
+                "-": 1.0
+            }
+        }, 
+        "random": {
+            "-": {
+                "1": 0.25, 
+                "2": 0.75
+            }, 
+            "1": {
+                "-": 1.0
+            }, 
+            "2": {
+                "-": 1.0
+            }
+        }, 
+        "http": {
+            "-": {
+                "3": 1.0
+            }, 
+            "3": {
+                "4": 1.0
+            }, 
+            "4": {
+                "5": 1.0
+            }, 
+            "5": {
+                "6": 1.0
+            }, 
+            "6": {
+                "7": 1.0
+            }, 
+            "7": {
+                "-": 1.0
+            }
+        }
+    }
+}
+----
