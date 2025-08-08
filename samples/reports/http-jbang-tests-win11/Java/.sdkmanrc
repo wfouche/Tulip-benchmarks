@@ -1,0 +1,20 @@
+# Java
+java=21.0.8-tem
+
+# Gradle
+gradle=8.14.3
+
+# JBang
+jbang=0.129.0
+
+# Scala
+scalacli=1.8.5
+
+# MCS
+mcs=0.7.6
+
+# Maven
+maven=3.9.11
+
+# VisualVM
+visualvm=2.2
