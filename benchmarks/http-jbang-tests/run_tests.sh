@@ -13,9 +13,9 @@ jbang cache clear
 # "-XX:+UseLargePages",
 jbang --fresh run tulip-cli@wfouche
 
-export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.8"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.9-dev"
 export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
-
+export TULIP_CLI="tulip-cli-dev@wfouche"
 #unset TULIP_JAVA_OPTIONS
 #export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational -XX:+UseLargePages"
 
@@ -23,7 +23,7 @@ rm -f -r Java
 mkdir -p Java
 cd Java || exit
 echo ""
-jbang run tulip-cli@wfouche init Java $TULIP_PARAMS
+jbang run $TULIP_CLI init Java $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
@@ -31,7 +31,7 @@ rm -f -r Groovy
 mkdir -p Groovy
 cd Groovy || exit
 echo ""
-jbang run tulip-cli@wfouche init Groovy $TULIP_PARAMS
+jbang run $TULIP_CLI init Groovy $TULIP_PARAMS
 
 . ./run_bench.sh
 cd ..
@@ -40,7 +40,7 @@ rm -f -r Kotlin
 mkdir -p Kotlin
 cd Kotlin || exit
 echo ""
-jbang run tulip-cli@wfouche init Kotlin $TULIP_PARAMS
+jbang run $TULIP_CLI init Kotlin $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
@@ -48,7 +48,7 @@ rm -f -r Scala
 mkdir -p Scala
 cd Scala || exit
 echo ""
-jbang run tulip-cli@wfouche init Scala $TULIP_PARAMS
+jbang run $TULIP_CLI init Scala $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
@@ -56,7 +56,7 @@ rm -f -r Jython
 mkdir -p Jython
 cd Jython || exit
 echo ""
-jbang run tulip-cli@wfouche init Jython $TULIP_PARAMS
+jbang run $TULIP_CLI init Jython $TULIP_PARAMS
 . ./run_bench.sh
 cd ..
 
