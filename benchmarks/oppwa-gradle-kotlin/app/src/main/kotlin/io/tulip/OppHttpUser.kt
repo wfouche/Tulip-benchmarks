@@ -5,16 +5,16 @@ package io.tulip
 import io.github.wfouche.tulip.user.HttpUser
 import io.github.wfouche.tulip.core.Console
 import io.github.wfouche.tulip.core.delayMillisRandom
-//import java.net.URI
-//import java.net.http.HttpClient
-//import java.net.http.HttpRequest
-//import java.net.http.HttpResponse
+
 import io.github.wfouche.tulip.pfsm.Edge
 import io.github.wfouche.tulip.pfsm.MarkovChain
 import java.lang.Exception
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import org.springframework.web.client.RestClientException
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /*-------------------------------------------------------------------------*/
 
@@ -278,7 +278,14 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
 
     // ----------------------------------------------------------------- //
 
+    override fun getLogger(): Logger {
+        return logger
+    }
+
+    // ----------------------------------------------------------------- //
+
     companion object {
+        private val logger: Logger = LoggerFactory.getLogger(OppHttpUser::class.java)
         private var token: String = ""
     }
 
