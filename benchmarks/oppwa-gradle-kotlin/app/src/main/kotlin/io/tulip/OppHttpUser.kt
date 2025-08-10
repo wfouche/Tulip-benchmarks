@@ -3,12 +3,7 @@ package io.tulip
 /*-------------------------------------------------------------------------*/
 
 import io.github.wfouche.tulip.user.HttpUser
-import io.github.wfouche.tulip.core.Console
-import io.github.wfouche.tulip.core.delayMillisRandom
 
-import io.github.wfouche.tulip.pfsm.Edge
-import io.github.wfouche.tulip.pfsm.MarkovChain
-import java.lang.Exception
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import org.springframework.web.client.RestClientException
@@ -17,18 +12,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /*-------------------------------------------------------------------------*/
-
-//private val client = HttpClient.newHttpClient()
-
-/*-------------------------------------------------------------------------*/
-
-enum class State(val state:Int) {
-    IDLE(0), // Idle
-    PA(1),   // Auth
-    CP(2),   // Comp
-    RF(3),   // Refund
-    DB(4)    // Debit
-}
 
 // https://transform.tools/json-to-kotlin
 
@@ -76,8 +59,6 @@ data class Card(
 data class Risk(
     val score: String,
 )
-
-/*-------------------------------------------------------------------------*/
 
 @Serializable
 data class CompResponse(
