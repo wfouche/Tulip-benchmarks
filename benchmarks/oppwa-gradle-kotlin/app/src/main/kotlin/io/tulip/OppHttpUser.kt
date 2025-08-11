@@ -235,7 +235,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
 
     // ----------------------------------------------------------------- //
 
-    override fun getLogger(): Logger {
+    override fun logger(): Logger {
         return logger
     }
 
