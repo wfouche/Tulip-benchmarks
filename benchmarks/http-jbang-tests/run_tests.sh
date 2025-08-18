@@ -13,7 +13,7 @@ jbang cache clear
 # "-XX:+UseLargePages",
 jbang --fresh run tulip-cli@wfouche
 
-export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.9-dev"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.9"
 export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
 export TULIP_CLI="tulip-cli-dev@wfouche"
 #unset TULIP_JAVA_OPTIONS
