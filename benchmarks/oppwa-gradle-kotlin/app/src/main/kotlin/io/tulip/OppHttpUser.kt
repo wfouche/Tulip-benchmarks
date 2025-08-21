@@ -32,18 +32,18 @@ data class AuthResponse(
     val ndc: String,
     val source: String,
     val paymentMethod: String,
-    val shortId: String,
+    val shortId: String
 )
 
 @Serializable
 data class Result(
     val code: String,
-    val description: String,
+    val description: String
 )
 
 @Serializable
 data class ResultDetails(
-    val clearingInstituteName: String,
+    val clearingInstituteName: String
 )
 
 @Serializable
@@ -52,12 +52,12 @@ data class Card(
     val last4Digits: String,
     val holder: String,
     val expiryMonth: String,
-    val expiryYear: String,
+    val expiryYear: String
 )
 
 @Serializable
 data class Risk(
-    val score: String,
+    val score: String
 )
 
 @Serializable
@@ -75,7 +75,7 @@ data class CompResponse(
     val ndc: String,
     val source: String,
     val paymentMethod: String,
-    val shortId: String,
+    val shortId: String
 )
 
 /*-------------------------------------------------------------------------*/
