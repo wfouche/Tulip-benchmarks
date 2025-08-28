@@ -84,7 +84,6 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
     // ----------------------------------------------------------------- //
 
     private var paymentId: String = ""
-    private val entityId: String = "8ac7a4c79394bdc801939736f17e063d";
 
     // ----------------------------------------------------------------- //
 
@@ -92,6 +91,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
         if (userId == 0) {
             super.onStart()
             token = getUserParamValue("token")
+            entityId = getUserParamValue("entityId")
         }
         return true
     }
@@ -244,6 +244,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(OppHttpUser::class.java)
         private var token: String = ""
+        private var entityId: String = ""
     }
 
 }
