@@ -48,9 +48,9 @@
         },
         "Constant TPS": {
             "enabled": true,
-            "aps_rate": 50.0,
+            "aps_rate": 30.0,
             "time": {
-                "pre_warmup_duration": 15,
+                "pre_warmup_duration": 0,
                 "warmup_duration": 15,
                 "benchmark_duration": 30,
                 "benchmark_iterations": 9
@@ -60,10 +60,10 @@
         "Rising TPS": {
             "enabled": true,
             "aps_rate": 10.0,
-            "aps_rate_step_change": 20.0,
+            "aps_rate_step_change": 10.0,
             "aps_rate_step_count": 3,
             "time": {
-                "pre_warmup_duration": 15,
+                "pre_warmup_duration": 0,
                 "warmup_duration": 15,
                 "benchmark_duration": 30,
                 "benchmark_iterations": 3
