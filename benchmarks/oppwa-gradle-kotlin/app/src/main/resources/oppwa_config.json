@@ -6,7 +6,7 @@
         "user_class": "io.tulip.OppHttpUser",
         "user_params": {
             "url": "https://eu-test.oppwa.com",
-            "httpVersion": "HTTP_2",
+            "httpVersion": "HTTP_1_1",
             "connectTimeoutMillis": 2000,
             "readTimeoutMillis": 5000,
             "entityId": "8ac7a4c79394bdc801939736f17e063d",
