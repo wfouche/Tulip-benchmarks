@@ -29,10 +29,7 @@ data class AuthResponse(
     val risk: Risk,
     val buildNumber: String,
     val timestamp: String,
-    val ndc: String,
-    val source: String,
-    val paymentMethod: String,
-    val shortId: String
+    val ndc: String
 )
 
 @Serializable
@@ -43,7 +40,12 @@ data class Result(
 
 @Serializable
 data class ResultDetails(
-    val clearingInstituteName: String
+    val ExtendedDescription: String,
+    val clearingInstituteName: String,
+    val ConnectorTxID1: String,
+    val ConnectorTxID2: String,
+    val ConnectorTxID3: String,
+    val AcquirerResponse: String
 )
 
 @Serializable
@@ -72,10 +74,7 @@ data class CompResponse(
     val resultDetails: ResultDetails,
     val buildNumber: String,
     val timestamp: String,
-    val ndc: String,
-    val source: String,
-    val paymentMethod: String,
-    val shortId: String
+    val ndc: String
 )
 
 /*-------------------------------------------------------------------------*/
@@ -85,6 +84,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
     // ----------------------------------------------------------------- //
 
     private var paymentId: String = ""
+    private val entityId: String = "8ac7a4c79394bdc801939736f17e063d";
 
     // ----------------------------------------------------------------- //
 
@@ -103,7 +103,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
     override fun action1(): Boolean {
         paymentId = ""
         val map = mapOf(
-            "entityId" to "8a8294174b7ecb28014b9699220015ca",
+            "entityId" to entityId,
             "amount" to "92.00",
             "currency" to "EUR",
             "paymentBrand" to "VISA",
@@ -140,7 +140,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             return false
         }
         val map = mapOf(
-            "entityId" to "8a8294174b7ecb28014b9699220015ca",
+            "entityId" to entityId,
             "amount" to "92.00",
             "currency" to "EUR",
             "paymentType" to "CP"
@@ -168,7 +168,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
     override fun action3(): Boolean {
         paymentId = ""
         val map = mapOf(
-            "entityId" to "8a8294174b7ecb28014b9699220015ca",
+            "entityId" to entityId,
             "amount" to "92.00",
             "currency" to "EUR",
             "paymentBrand" to "VISA",
@@ -205,7 +205,7 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             return false
         }
         val map = mapOf(
-            "entityId" to "8a8294174b7ecb28014b9699220015ca",
+            "entityId" to entityId,
             "amount" to "92.00",
             "currency" to "EUR",
             "paymentType" to "RF"
