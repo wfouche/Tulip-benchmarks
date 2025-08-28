@@ -9,8 +9,8 @@
             "httpVersion": "HTTP_2",
             "connectTimeoutMillis": 2000,
             "readTimeoutMillis": 5000,
-            "token": "OGFjN2E0Yzc5Mzk0YmRjODAxOTM5NzM2ZjFhNzA2NDF8enlac1lYckc4QXk6bjYzI1NHNng=",
             "entityId": "8ac7a4c79394bdc801939736f17e063d",
+            "token": "OGFjN2E0Yzc5Mzk0YmRjODAxOTM5NzM2ZjFhNzA2NDF8enlac1lYckc4QXk6bjYzI1NHNng=",
             "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         },
         "user_actions": {
