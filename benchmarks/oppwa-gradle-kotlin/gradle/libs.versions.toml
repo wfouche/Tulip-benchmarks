@@ -3,7 +3,7 @@
 
 [versions]
 tulip-runtime = "2.1.10-dev"
-guava = "33.4.8-jre"
+guava = "33.5.0-jre"
 junit-jupiter-engine = "5.13.0"
 kotlin = "2.2.20"
 kotlin-test-junit5 = "2.2.20"
