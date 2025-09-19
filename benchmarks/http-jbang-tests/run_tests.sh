@@ -11,13 +11,13 @@ jbang cache clear
 # $ echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 #
 # "-XX:+UseLargePages",
-jbang --fresh run tulip-cli@wfouche
 
-export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.9"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.10-dev HTTP"
 export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
 export TULIP_CLI="tulip-cli-dev@wfouche"
 #unset TULIP_JAVA_OPTIONS
 #export TULIP_JAVA_OPTIONS="-server -Xms2g -Xmx2g -XX:+UseZGC -XX:+ZGenerational -XX:+UseLargePages"
+jbang --fresh run $TULIP_CLI
 
 rm -f -r Java
 mkdir -p Java
