@@ -1,3 +1,4 @@
+rm -f app/app.log
 ./gradlew clean
 ./gradlew run --args="--config=oppwa_config.json" --console=colored
 echo ""
