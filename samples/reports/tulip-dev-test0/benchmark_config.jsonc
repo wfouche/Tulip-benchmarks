@@ -1,0 +1,163 @@
+{
+    "actions": { // Actions
+        "description": "Micro-benchmarks",
+        "output_filename": "benchmark_output.json",
+        "report_filename": "benchmark_report.html",
+        "user_class": "org.example.user.TestHttpUser",
+        "user_params": {
+            //"url": "https://jsonplaceholder.typicode.com",
+            "url": "http://localhost:7070",
+            "debug": false,
+            "http_port": 7070
+        },
+        "user_actions": {
+            "0": "onStart",
+            "1": "DELAY-6ms",
+            "2": "DELAY-14ms",
+            "3": "r/posts",
+            "4": "r/comments",
+            "5": "r/albums",
+            "6": "r/photos",
+            "7": "r/todos",
+            "8": "Nop1",
+            "9": "Nop2",
+            "10": "DELAY-10ms",
+            "100": "onStop"
+        }
+    },
+    "contexts": {
+        // Contexts
+        "Context-0": {
+            "enabled": true,
+            "num_users": 16,
+            "num_threads": 2
+        },
+        "Context-1": {
+            "enabled": false,
+            "num_users": 32,
+            "num_threads": 4
+        }
+    },
+    "benchmarks": {
+        "onStart": {
+            "enabled": true,
+            "scenario_actions": [
+                { "id": 0 }
+            ]
+        },
+        "Max TPS": {
+            "enabled": true,
+            "aps_rate": 0.0,
+            "worker_thread_queue_size": 0,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 30,
+                "benchmark_duration": 60,
+                "benchmark_iterations": 4
+            },
+            "scenario_workflow": "max-tps"
+        },
+        "100k TPS": {
+            "enabled": true,
+            "aps_rate": 100000.0,
+            "worker_thread_queue_size": 0,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 30,
+                "benchmark_duration": 60,
+                "benchmark_iterations": 4
+            },
+            "scenario_workflow": "max-tps"
+        },
+        "100 TPS": {
+            "enabled": true,
+            "aps_rate": 100.0,
+            "worker_thread_queue_size": 1,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 15,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 4
+            },
+            "scenario_workflow": "random"
+        },
+        "50 TPS": {
+            "enabled": true,
+            "aps_rate": 50.0,
+            "worker_thread_queue_size": 1,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 15,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 4
+            },
+            "scenario_actions": [
+                { "id": 10 }
+            ]
+        },
+        "HTTP Max TPS": {
+            "enabled": true,
+            "aps_rate": 0.0,
+            "worker_thread_queue_size": 0,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 15,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 3
+            },
+            "scenario_workflow": "http"
+        },
+        "HTTP 1250 TPS": {
+            "enabled": true,
+            "aps_rate": 1250.0,
+            "worker_thread_queue_size": 0,
+            "time": {
+                "pre_warmup_duration": 15,
+                "warmup_duration": 15,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 3
+            },
+            "scenario_workflow": "http"
+        },
+        "onStop": {
+            "enabled":true,
+            "scenario_actions": [
+                {"id": 100 }
+            ]
+        }
+    },
+    "workflows": {
+        "max-tps": {
+            "-": {
+                "8": 0.50,
+                "9": 0.50
+            },
+            "8": {
+                "-": 1.0
+            },
+            "9": {
+                "-": 1.0
+            }
+        },
+        "random": {
+            "-": {
+                "1": 0.25,
+                "2": 0.75
+            },
+            "1": {
+                "-": 1.0
+            },
+            "2": {
+                "-": 1.0
+            }
+        },
+        "http": {
+            "-": {"3": 1.0},
+            "3": {"4": 1.0},
+            "4": {"5": 1.0},
+            "5": {"6": 1.0},
+            "6": {"7": 1.0},
+            "7": {"-": 1.0}
+        }
+    }
+}

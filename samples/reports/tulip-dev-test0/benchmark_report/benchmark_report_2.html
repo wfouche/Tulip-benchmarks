@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+    div.histo {
+         display: none
+    }
+</style>
+
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
+    // Load the Visualization API and the corechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawInitialChart);
+
+    var chartData = null;
+    var chart = null;
+
+    function setChartData(names, histos) {
+        while (names.length < histos.length) {
+            names.push('Unknown');
+        }
+
+        var series = [];
+        for (var i = 0; i < histos.length; i++) {
+            series = appendDataSeries(histos[i], names[i], series);
+        }
+
+        chartData = google.visualization.arrayToDataTable(series);
+    }
+
+
+    function drawInitialChart() {
+        // Connect the choose files button:
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        // Load some static example data:
+    var data1Str = document.querySelector("div#data_1").innerHTML.trim();
+    var histos = [data1Str];
+    var names = ['A3'];
+    setChartData(names, histos);
+    drawChart();
+    }
+
+    var maxPercentile = 1000000;
+
+    function drawChart() {
+
+        var ticks =
+                [{v:1,f:'0%'},
+                    {v:10,f:'90%'},
+                    {v:100,f:'99%'},
+                    {v:1000,f:'99.9%'},
+                    {v:10000,f:'99.99%'},
+                    {v:100000,f:'99.999%'},
+                    {v:1000000,f:'99.9999%'},
+                    {v:10000000,f:'99.99999%'},
+                    {v:100000000,f:'99.999999%'}];
+
+        var unitSelection = document.getElementById("timeUnitSelection");
+        var unitSelIndex = unitSelection.selectedIndex;
+        var unitText = unitSelection.options[unitSelIndex].innerHTML;
+
+        var options = {
+//            title: 'Percentile Response Time Distribution',
+            height: 480,
+//            hAxis: {title: 'Percentile', minValue: 0, logScale: true, ticks:ticks },
+            hAxis: {
+                title: "Percentile",
+                minValue: 1, logScale: true, ticks:ticks,
+                viewWindowMode:'explicit',
+                viewWindow:{
+                    max:maxPercentile,
+                    min:1
+                }
+            },
+            vAxis: {title: 'Latency (' + unitText + ')', minValue: 0 },
+            legend: {position: 'bottom'}
+        };
+
+
+        // add tooltips with correct percentile text to data:
+        var columns = [0];
+        for (var i = 1; i < chartData.getNumberOfColumns(); i++) {
+            columns.push(i);
+            columns.push({
+                type: 'string',
+                properties: {
+                    role: 'tooltip'
+                },
+                calc: (function (j) {
+                    return function (dt, row) {
+                        var percentile = 100.0 - (100.0/dt.getValue(row, 0));
+                        return dt.getColumnLabel(j) + ': ' +
+                                percentile.toPrecision(7) +
+                                '\%\'ile = ' + dt.getValue(row, j) + ' ' + unitText
+                    }
+                })(i)
+            });
+        }
+        var view = new google.visualization.DataView(chartData);
+        view.setColumns(columns);
+
+        chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(view, options);
+
+        google.visualization.events.addListener(chart, 'ready', function () {
+            chart_div.innerHTML = '<img src="' + chart.getImageURI() + '">';
+        });
+
+    }
+</script>
+<script type="text/javascript">
+    function appendDataSeries(histo, name, dataSeries) {
+        var series;
+        var seriesCount;
+        if (dataSeries.length == 0) {
+            series = [ ['X', name] ];
+            seriesCount = 1;
+        } else {
+            series = dataSeries;
+            series[0].push(name);
+            seriesCount = series[0].length - 1;
+        }
+
+        var lines = histo.split("\n");
+
+        var seriesIndex = 1;
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            var values = line.trim().split(/[ ]+/);
+
+            if (line[0] != '#' && values.length == 4) {
+
+                var y = parseFloat(values[0]);
+                var x = parseFloat(values[3]);
+
+                if (!isNaN(x) && !isNaN(y)) {
+
+                    if (seriesIndex >= series.length) {
+                        series.push([x]);
+                    }
+
+                    while (series[seriesIndex].length < seriesCount) {
+                        series[seriesIndex].push(null);
+                    }
+
+                    series[seriesIndex].push(y);
+                    seriesIndex++;
+                }
+            }
+        }
+
+        while (seriesIndex < series.length) {
+            series[seriesIndex].push(null);
+            seriesIndex++;
+        }
+
+        return series;
+    }
+</script>
+<script>
+    function timeUnitsSelected(evt) {
+        drawChart();
+        return {typed: ''};
+    }
+
+    function doExport(event) {
+        saveSvgAsPng(document.querySelector('svg'), 'Histogram', 2.0);
+        return {typed: ''};
+    }
+</script>
+
+<script>
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+        var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+        var names = [];
+        var histos = [];
+
+        fileDisplayArea.innerText = "file selected...\n";
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader();
+
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    histos.push(e.target.result);
+                    names.push(escape(theFile.name));
+                    fileDisplayArea.innerText = " Plotting input from: " + names + "\n";
+                    setChartData(names, histos);
+                    drawChart();
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsText(f);
+        }
+
+    }
+
+</script>
+
+<script type="text/javascript">
+    (function() {
+        var out$ = typeof exports != 'undefined' && exports || this;
+
+        var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+
+        function inlineImages(callback) {
+            var images = document.querySelectorAll('svg image');
+            var left = images.length;
+            if (left == 0) {
+                callback();
+            }
+            for (var i = 0; i < images.length; i++) {
+                (function(image) {
+                    if (image.getAttribute('xlink:href')) {
+                        var href = image.getAttribute('xlink:href').value;
+                        if (/^http/.test(href) && !(new RegExp('^' + window.location.host).test(href))) {
+                            throw new Error("Cannot render embedded images linking to external hosts.");
+                        }
+                    }
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    var img = new Image();
+                    img.src = image.getAttribute('xlink:href');
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        image.setAttribute('xlink:href', canvas.toDataURL('image/png'));
+                        left--;
+                        if (left == 0) {
+                            callback();
+                        }
+                    }
+                })(images[i]);
+            }
+        }
+
+        function styles(dom) {
+            var css = "";
+            var sheets = document.styleSheets;
+            for (var i = 0; i < sheets.length; i++) {
+                if (sheets[i].hasOwnProperty('cssRules')) {
+                    var rules = sheets[i].cssRules;
+                    for (var j = 0; j < rules.length; j++) {
+                        var rule = rules[j];
+                        if (typeof(rule.style) != "undefined") {
+                            css += rule.selectorText + " { " + rule.style.cssText + " }\n";
+                        }
+                    }
+                }
+            }
+
+            var s = document.createElement('style');
+            s.setAttribute('type', 'text/css');
+            s.innerHTML = "<![CDATA[\n" + css + "\n]]>";
+
+            var defs = document.createElement('defs');
+            defs.appendChild(s);
+            return defs;
+        }
+
+        out$.svgAsDataUri = function(el, scaleFactor, cb) {
+            scaleFactor = scaleFactor || 1;
+
+            inlineImages(function() {
+                var outer = document.createElement("div");
+                var clone = el.cloneNode(true);
+                var width = parseInt(
+                        clone.getAttribute('width')
+                        || clone.style.width
+                        || out$.getComputedStyle(el).getPropertyValue('width')
+                );
+                var height = parseInt(
+                        clone.getAttribute('height')
+                        || clone.style.height
+                        || out$.getComputedStyle(el).getPropertyValue('height')
+                );
+
+                var xmlns = "http://www.w3.org/2000/xmlns/";
+
+                clone.setAttribute("version", "1.1");
+                clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
+                clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+                clone.setAttribute("width", width * scaleFactor);
+                clone.setAttribute("height", height * scaleFactor);
+                clone.setAttribute("viewBox", "0 0 " + width + " " + height);
+                outer.appendChild(clone);
+
+                clone.insertBefore(styles(clone), clone.firstChild);
+
+                var svg = doctype + outer.innerHTML;
+                var uri = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svg)));
+                if (cb) {
+                    cb(uri);
+                }
+            });
+        }
+
+        out$.saveSvgAsPng = function(el, name, scaleFactor) {
+            out$.svgAsDataUri(el, scaleFactor, function(uri) {
+                var image = new Image();
+                image.src = uri;
+                image.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(image, 0, 0);
+
+                    var a = document.createElement('a');
+                    a.download = name;
+                    a.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(a);
+                    a.click();
+                }
+            });
+        }
+    })();
+</script>
+
+<style>
+    .slider-width500
+    {
+        width: 500px;
+    }
+</style>
+
+</head>
+
+<body>
+
+
+<h2>Actions per Second</h2>
+  <div id="main" style="width: 100%;height:400px;"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
+  <script src="benchmark_report_2_t.js"></script>
+<h2>Response Times (ms)</h2>
+  <div id="main_p" style="width: 100%;height:400px;"></div>
+  <script src="benchmark_report_2_p.js"></script>
+
+
+<h2>Percentile Response Time Distribution</h2>
+
+<input type="file" id="files" name="files[]" multiple />
+
+<pre id="fileDisplayArea">Please select file(s) above.</pre>
+
+<!--Div that will hold the chart-->
+<div id="chart_div">None Loaded</div>
+
+Latency time units:
+<select name="units" size="1" id="timeUnitSelection" onChange="timeUnitsSelected()">
+    <option value="Latency (seconds)">seconds</option>
+    <option selected value="Latency (milliseconds)">milliseconds</option>
+    <option value="Latency (qs)">microseconds</option>
+    <option value="Latency (nanoseconds)">nanoseconds</option>
+</select>
+<button type='button' onclick='doExport(event)'>Export Image</button>
+
+&nbsp; &nbsp; &nbsp; &nbsp;
+<p>
+Percentile range:
+
+<input type="range" class="slider-width500"
+       min="1" max="8" value="7" step="1"
+       width="300px"
+       onchange="showValue(this.value)" />
+<span id="percentileRange">99.99999%</span>
+<script type="text/javascript">
+    function showValue(newValue) {
+        var x = Math.pow(10, newValue);
+        var percentile = 100.0 - (100.0 / x);
+        document.getElementById("percentileRange").innerHTML=percentile + "%";
+        maxPercentile = x;
+        drawChart();
+        return {typed: ''};
+    }
+</script>
+</p>
+
+<div id="data_1" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.000 0.000000000000    8998965           1.00
+       0.000 0.100000000000    8998965           1.11
+       0.000 0.200000000000    8998965           1.25
+       0.000 0.300000000000    8998965           1.43
+       0.000 0.400000000000    8998965           1.67
+       0.000 0.500000000000    8998965           2.00
+       0.000 0.550000000000    8998965           2.22
+       0.000 0.600000000000    8998965           2.50
+       0.000 0.650000000000    8998965           2.86
+       0.000 0.700000000000    8998965           3.33
+       0.000 0.750000000000    8998965           4.00
+       0.000 0.775000000000    8998965           4.44
+       0.000 0.800000000000    8998965           5.00
+       0.000 0.825000000000    8998965           5.71
+       0.000 0.850000000000    8998965           6.67
+       0.000 0.875000000000    8998965           8.00
+       0.000 0.887500000000    8998965           8.89
+       0.000 0.900000000000    8998965          10.00
+       0.000 0.912500000000    8998965          11.43
+       0.000 0.925000000000    8998965          13.33
+       0.000 0.937500000000    8998965          16.00
+       0.000 0.943750000000    8998965          17.78
+       0.000 0.950000000000    8998965          20.00
+       0.000 0.956250000000    8998965          22.86
+       0.000 0.962500000000    8998965          26.67
+       0.000 0.968750000000    8998965          32.00
+       0.000 0.971875000000    8998965          35.56
+       0.000 0.975000000000    8998965          40.00
+       0.000 0.978125000000    8998965          45.71
+       0.000 0.981250000000    8998965          53.33
+       0.000 0.984375000000    8998965          64.00
+       0.000 0.985937500000    8998965          71.11
+       0.000 0.987500000000    8998965          80.00
+       0.000 0.989062500000    8998965          91.43
+       0.000 0.990625000000    8998965         106.67
+       0.000 0.992187500000    8998965         128.00
+       0.000 0.992968750000    8998965         142.22
+       0.000 0.993750000000    8998965         160.00
+       0.000 0.994531250000    8998965         182.86
+       0.000 0.995312500000    8998965         213.33
+       0.000 0.996093750000    8998965         256.00
+       0.000 0.996484375000    8998965         284.44
+       0.000 0.996875000000    8998965         320.00
+       0.000 0.997265625000    8998965         365.71
+       0.000 0.997656250000    8998965         426.67
+       0.000 0.998046875000    8998965         512.00
+       0.000 0.998242187500    8998965         568.89
+       0.000 0.998437500000    8998965         640.00
+       0.000 0.998632812500    8998965         731.43
+       0.000 0.998828125000    8998965         853.33
+       0.000 0.999023437500    8998965        1024.00
+       0.000 0.999121093750    8998965        1137.78
+       0.000 0.999218750000    8998965        1280.00
+       0.000 0.999316406250    8998965        1462.86
+       0.000 0.999414062500    8998965        1706.67
+       0.000 0.999511718750    8998965        2048.00
+       0.000 0.999560546875    8998965        2275.56
+       0.000 0.999609375000    8998965        2560.00
+       0.000 0.999658203125    8998965        2925.71
+       0.000 0.999707031250    8998965        3413.33
+       0.000 0.999755859375    8998965        4096.00
+       0.000 0.999780273438    8998965        4551.11
+       0.000 0.999804687500    8998965        5120.00
+       0.000 0.999829101563    8998965        5851.43
+       0.000 0.999853515625    8998965        6826.67
+       0.000 0.999877929688    8998965        8192.00
+       0.004 0.999890136719    8999021        9102.22
+       0.006 0.999902343750    8999128       10240.00
+       0.007 0.999914550781    8999254       11702.86
+       0.008 0.999926757813    8999434       13653.33
+       0.009 0.999938964844    8999558       16384.00
+       0.009 0.999945068359    8999558       18204.44
+       0.010 0.999951171875    8999630       20480.00
+       0.010 0.999957275391    8999630       23405.71
+       0.011 0.999963378906    8999680       27306.67
+       0.012 0.999969482422    8999740       32768.00
+       0.013 0.999972534180    8999807       36408.89
+       0.013 0.999975585938    8999807       40960.00
+       0.014 0.999978637695    8999865       46811.43
+       0.014 0.999981689453    8999865       54613.33
+       0.014 0.999984741211    8999865       65536.00
+       0.015 0.999986267090    8999893       72817.78
+       0.015 0.999987792969    8999893       81920.00
+       0.016 0.999989318848    8999906       93622.86
+       0.018 0.999990844727    8999921      109226.67
+       0.019 0.999992370605    8999938      131072.00
+       0.020 0.999993133545    8999945      145635.56
+       0.021 0.999993896484    8999955      163840.00
+       0.021 0.999994659424    8999955      187245.71
+       0.022 0.999995422363    8999964      218453.33
+       0.023 0.999996185303    8999968      262144.00
+       0.024 0.999996566772    8999972      291271.11
+       0.025 0.999996948242    8999975      327680.00
+       0.026 0.999997329712    8999978      374491.43
+       0.029 0.999997711182    8999981      436906.67
+       0.033 0.999998092651    8999984      524288.00
+       0.037 0.999998283386    8999985      582542.22
+       0.038 0.999998474121    8999987      655360.00
+       0.039 0.999998664856    8999988      748982.86
+       0.043 0.999998855591    8999990      873813.33
+       0.046 0.999999046326    8999993     1048576.00
+       0.046 0.999999141693    8999993     1165084.44
+       0.047 0.999999237061    8999994     1310720.00
+       0.047 0.999999332428    8999994     1497965.71
+       0.048 0.999999427795    8999995     1747626.67
+       0.051 0.999999523163    8999996     2097152.00
+       0.059 0.999999570847    8999997     2330168.89
+       0.059 0.999999618530    8999997     2621440.00
+       0.059 0.999999666214    8999997     2995931.43
+       0.091 0.999999713898    8999998     3495253.33
+       0.091 0.999999761581    8999998     4194304.00
+       0.105 0.999999785423    8999999     4660337.78
+       0.105 0.999999809265    8999999     5242880.00
+       0.105 0.999999833107    8999999     5991862.86
+       0.105 0.999999856949    8999999     6990506.67
+       0.105 0.999999880791    8999999     8388608.00
+       0.111 0.999999892712    9000000     9320675.55
+       0.111 1.000000000000    9000000
+#[Mean    =        0.000, StdDeviation   =        0.000]
+#[Max     =        0.111, Total count    =      9000000]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_0" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.000 0.000000000000    8998965           1.00
+       0.000 0.100000000000    8998965           1.11
+       0.000 0.200000000000    8998965           1.25
+       0.000 0.300000000000    8998965           1.43
+       0.000 0.400000000000    8998965           1.67
+       0.000 0.500000000000    8998965           2.00
+       0.000 0.550000000000    8998965           2.22
+       0.000 0.600000000000    8998965           2.50
+       0.000 0.650000000000    8998965           2.86
+       0.000 0.700000000000    8998965           3.33
+       0.000 0.750000000000    8998965           4.00
+       0.000 0.775000000000    8998965           4.44
+       0.000 0.800000000000    8998965           5.00
+       0.000 0.825000000000    8998965           5.71
+       0.000 0.850000000000    8998965           6.67
+       0.000 0.875000000000    8998965           8.00
+       0.000 0.887500000000    8998965           8.89
+       0.000 0.900000000000    8998965          10.00
+       0.000 0.912500000000    8998965          11.43
+       0.000 0.925000000000    8998965          13.33
+       0.000 0.937500000000    8998965          16.00
+       0.000 0.943750000000    8998965          17.78
+       0.000 0.950000000000    8998965          20.00
+       0.000 0.956250000000    8998965          22.86
+       0.000 0.962500000000    8998965          26.67
+       0.000 0.968750000000    8998965          32.00
+       0.000 0.971875000000    8998965          35.56
+       0.000 0.975000000000    8998965          40.00
+       0.000 0.978125000000    8998965          45.71
+       0.000 0.981250000000    8998965          53.33
+       0.000 0.984375000000    8998965          64.00
+       0.000 0.985937500000    8998965          71.11
+       0.000 0.987500000000    8998965          80.00
+       0.000 0.989062500000    8998965          91.43
+       0.000 0.990625000000    8998965         106.67
+       0.000 0.992187500000    8998965         128.00
+       0.000 0.992968750000    8998965         142.22
+       0.000 0.993750000000    8998965         160.00
+       0.000 0.994531250000    8998965         182.86
+       0.000 0.995312500000    8998965         213.33
+       0.000 0.996093750000    8998965         256.00
+       0.000 0.996484375000    8998965         284.44
+       0.000 0.996875000000    8998965         320.00
+       0.000 0.997265625000    8998965         365.71
+       0.000 0.997656250000    8998965         426.67
+       0.000 0.998046875000    8998965         512.00
+       0.000 0.998242187500    8998965         568.89
+       0.000 0.998437500000    8998965         640.00
+       0.000 0.998632812500    8998965         731.43
+       0.000 0.998828125000    8998965         853.33
+       0.000 0.999023437500    8998965        1024.00
+       0.000 0.999121093750    8998965        1137.78
+       0.000 0.999218750000    8998965        1280.00
+       0.000 0.999316406250    8998965        1462.86
+       0.000 0.999414062500    8998965        1706.67
+       0.000 0.999511718750    8998965        2048.00
+       0.000 0.999560546875    8998965        2275.56
+       0.000 0.999609375000    8998965        2560.00
+       0.000 0.999658203125    8998965        2925.71
+       0.000 0.999707031250    8998965        3413.33
+       0.000 0.999755859375    8998965        4096.00
+       0.000 0.999780273438    8998965        4551.11
+       0.000 0.999804687500    8998965        5120.00
+       0.000 0.999829101563    8998965        5851.43
+       0.000 0.999853515625    8998965        6826.67
+       0.000 0.999877929688    8998965        8192.00
+       0.004 0.999890136719    8999021        9102.22
+       0.006 0.999902343750    8999128       10240.00
+       0.007 0.999914550781    8999254       11702.86
+       0.008 0.999926757813    8999434       13653.33
+       0.009 0.999938964844    8999558       16384.00
+       0.009 0.999945068359    8999558       18204.44
+       0.010 0.999951171875    8999630       20480.00
+       0.010 0.999957275391    8999630       23405.71
+       0.011 0.999963378906    8999680       27306.67
+       0.012 0.999969482422    8999740       32768.00
+       0.013 0.999972534180    8999807       36408.89
+       0.013 0.999975585938    8999807       40960.00
+       0.014 0.999978637695    8999865       46811.43
+       0.014 0.999981689453    8999865       54613.33
+       0.014 0.999984741211    8999865       65536.00
+       0.015 0.999986267090    8999893       72817.78
+       0.015 0.999987792969    8999893       81920.00
+       0.016 0.999989318848    8999906       93622.86
+       0.018 0.999990844727    8999921      109226.67
+       0.019 0.999992370605    8999938      131072.00
+       0.020 0.999993133545    8999945      145635.56
+       0.021 0.999993896484    8999955      163840.00
+       0.021 0.999994659424    8999955      187245.71
+       0.022 0.999995422363    8999964      218453.33
+       0.023 0.999996185303    8999968      262144.00
+       0.024 0.999996566772    8999972      291271.11
+       0.025 0.999996948242    8999975      327680.00
+       0.026 0.999997329712    8999978      374491.43
+       0.029 0.999997711182    8999981      436906.67
+       0.033 0.999998092651    8999984      524288.00
+       0.037 0.999998283386    8999985      582542.22
+       0.038 0.999998474121    8999987      655360.00
+       0.039 0.999998664856    8999988      748982.86
+       0.043 0.999998855591    8999990      873813.33
+       0.046 0.999999046326    8999993     1048576.00
+       0.046 0.999999141693    8999993     1165084.44
+       0.047 0.999999237061    8999994     1310720.00
+       0.047 0.999999332428    8999994     1497965.71
+       0.048 0.999999427795    8999995     1747626.67
+       0.051 0.999999523163    8999996     2097152.00
+       0.059 0.999999570847    8999997     2330168.89
+       0.059 0.999999618530    8999997     2621440.00
+       0.059 0.999999666214    8999997     2995931.43
+       0.091 0.999999713898    8999998     3495253.33
+       0.091 0.999999761581    8999998     4194304.00
+       0.105 0.999999785423    8999999     4660337.78
+       0.105 0.999999809265    8999999     5242880.00
+       0.105 0.999999833107    8999999     5991862.86
+       0.105 0.999999856949    8999999     6990506.67
+       0.105 0.999999880791    8999999     8388608.00
+       0.111 0.999999892712    9000000     9320675.55
+       0.111 1.000000000000    9000000
+#[Mean    =        0.000, StdDeviation   =        0.000]
+#[Max     =        0.111, Total count    =      9000000]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+
+<style>
+table, th, td {
+  border:1px solid black; font-size:16px; text-align: center;
+}
+mark {
+  background-color: LightGray;
+  color: black;
+}
+</style>
+
+<h2>Percentile Response Time Distribution (HDR)</h2>
+<table style="width:800px">
+  <tr>
+    <th>Value</th>
+    <th>Percentile</th>
+    <th>TotalCount</th>
+    <th>1/(1-Percentile)</th>
+    <th>AboveCount</th>
+  </tr>
+  <tr>
+    <td>0.111 ms</td>
+    <td>1.000000000000</td>
+    <td>9000000</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>0.111 ms</td>
+    <td>0.999999892712</td>
+    <td>9000000</td>
+    <td>9320675.55</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>0.105 ms</td>
+    <td>0.999999880791</td>
+    <td>8999999</td>
+    <td>8388608.00</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0.105 ms</td>
+    <td>0.999999856949</td>
+    <td>8999999</td>
+    <td>6990506.67</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0.105 ms</td>
+    <td>0.999999833107</td>
+    <td>8999999</td>
+    <td>5991862.86</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0.105 ms</td>
+    <td>0.999999809265</td>
+    <td>8999999</td>
+    <td>5242880.00</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0.105 ms</td>
+    <td>0.999999785423</td>
+    <td>8999999</td>
+    <td>4660337.78</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0.091 ms</td>
+    <td>0.999999761581</td>
+    <td>8999998</td>
+    <td>4194304.00</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>0.091 ms</td>
+    <td>0.999999713898</td>
+    <td>8999998</td>
+    <td>3495253.33</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>0.059 ms</td>
+    <td>0.999999666214</td>
+    <td>8999997</td>
+    <td>2995931.43</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>0.059 ms</td>
+    <td>0.999999618530</td>
+    <td>8999997</td>
+    <td>2621440.00</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>0.059 ms</td>
+    <td>0.999999570847</td>
+    <td>8999997</td>
+    <td>2330168.89</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>0.051 ms</td>
+    <td>0.999999523163</td>
+    <td>8999996</td>
+    <td>2097152.00</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>0.048 ms</td>
+    <td>0.999999427795</td>
+    <td>8999995</td>
+    <td>1747626.67</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>0.047 ms</td>
+    <td>0.999999332428</td>
+    <td>8999994</td>
+    <td>1497965.71</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>0.047 ms</td>
+    <td>0.999999237061</td>
+    <td>8999994</td>
+    <td>1310720.00</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>0.046 ms</td>
+    <td>0.999999141693</td>
+    <td>8999993</td>
+    <td>1165084.44</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>0.046 ms</td>
+    <td>0.999999046326</td>
+    <td>8999993</td>
+    <td>1048576.00</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>0.043 ms</td>
+    <td>0.999998855591</td>
+    <td>8999990</td>
+    <td>873813.33</td>
+    <td>10</td>
+  </tr>
+  <tr>
+    <td>0.039 ms</td>
+    <td>0.999998664856</td>
+    <td>8999988</td>
+    <td>748982.86</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td>0.038 ms</td>
+    <td>0.999998474121</td>
+    <td>8999987</td>
+    <td>655360.00</td>
+    <td>13</td>
+  </tr>
+  <tr>
+    <td>0.037 ms</td>
+    <td>0.999998283386</td>
+    <td>8999985</td>
+    <td>582542.22</td>
+    <td>15</td>
+  </tr>
+  <tr>
+    <td>0.033 ms</td>
+    <td>0.999998092651</td>
+    <td>8999984</td>
+    <td>524288.00</td>
+    <td>16</td>
+  </tr>
+  <tr>
+    <td>0.029 ms</td>
+    <td>0.999997711182</td>
+    <td>8999981</td>
+    <td>436906.67</td>
+    <td>19</td>
+  </tr>
+  <tr>
+    <td>0.026 ms</td>
+    <td>0.999997329712</td>
+    <td>8999978</td>
+    <td>374491.43</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>0.025 ms</td>
+    <td>0.999996948242</td>
+    <td>8999975</td>
+    <td>327680.00</td>
+    <td>25</td>
+  </tr>
+  <tr>
+    <td>0.024 ms</td>
+    <td>0.999996566772</td>
+    <td>8999972</td>
+    <td>291271.11</td>
+    <td>28</td>
+  </tr>
+  <tr>
+    <td>0.023 ms</td>
+    <td>0.999996185303</td>
+    <td>8999968</td>
+    <td>262144.00</td>
+    <td>32</td>
+  </tr>
+  <tr>
+    <td>0.022 ms</td>
+    <td>0.999995422363</td>
+    <td>8999964</td>
+    <td>218453.33</td>
+    <td>36</td>
+  </tr>
+  <tr>
+    <td>0.021 ms</td>
+    <td>0.999994659424</td>
+    <td>8999955</td>
+    <td>187245.71</td>
+    <td>45</td>
+  </tr>
+  <tr>
+    <td>0.021 ms</td>
+    <td>0.999993896484</td>
+    <td>8999955</td>
+    <td>163840.00</td>
+    <td>45</td>
+  </tr>
+  <tr>
+    <td>0.020 ms</td>
+    <td>0.999993133545</td>
+    <td>8999945</td>
+    <td>145635.56</td>
+    <td>55</td>
+  </tr>
+  <tr>
+    <td>0.019 ms</td>
+    <td>0.999992370605</td>
+    <td>8999938</td>
+    <td>131072.00</td>
+    <td>62</td>
+  </tr>
+  <tr>
+    <td>0.018 ms</td>
+    <td>0.999990844727</td>
+    <td>8999921</td>
+    <td>109226.67</td>
+    <td>79</td>
+  </tr>
+  <tr>
+    <td>0.016 ms</td>
+    <td>0.999989318848</td>
+    <td>8999906</td>
+    <td>93622.86</td>
+    <td>94</td>
+  </tr>
+  <tr>
+    <td>0.015 ms</td>
+    <td>0.999987792969</td>
+    <td>8999893</td>
+    <td>81920.00</td>
+    <td>107</td>
+  </tr>
+  <tr>
+    <td>0.015 ms</td>
+    <td>0.999986267090</td>
+    <td>8999893</td>
+    <td>72817.78</td>
+    <td>107</td>
+  </tr>
+  <tr>
+    <td>0.014 ms</td>
+    <td>0.999984741211</td>
+    <td>8999865</td>
+    <td>65536.00</td>
+    <td>135</td>
+  </tr>
+  <tr>
+    <td>0.014 ms</td>
+    <td>0.999981689453</td>
+    <td>8999865</td>
+    <td>54613.33</td>
+    <td>135</td>
+  </tr>
+  <tr>
+    <td>0.014 ms</td>
+    <td>0.999978637695</td>
+    <td>8999865</td>
+    <td>46811.43</td>
+    <td>135</td>
+  </tr>
+  <tr>
+    <td>0.013 ms</td>
+    <td>0.999975585938</td>
+    <td>8999807</td>
+    <td>40960.00</td>
+    <td>193</td>
+  </tr>
+  <tr>
+    <td>0.013 ms</td>
+    <td>0.999972534180</td>
+    <td>8999807</td>
+    <td>36408.89</td>
+    <td>193</td>
+  </tr>
+  <tr>
+    <td>0.012 ms</td>
+    <td>0.999969482422</td>
+    <td>8999740</td>
+    <td>32768.00</td>
+    <td>260</td>
+  </tr>
+  <tr>
+    <td>0.011 ms</td>
+    <td>0.999963378906</td>
+    <td>8999680</td>
+    <td>27306.67</td>
+    <td>320</td>
+  </tr>
+  <tr>
+    <td>0.010 ms</td>
+    <td>0.999957275391</td>
+    <td>8999630</td>
+    <td>23405.71</td>
+    <td>370</td>
+  </tr>
+  <tr>
+    <td>0.010 ms</td>
+    <td>0.999951171875</td>
+    <td>8999630</td>
+    <td>20480.00</td>
+    <td>370</td>
+  </tr>
+  <tr>
+    <td>0.009 ms</td>
+    <td>0.999945068359</td>
+    <td>8999558</td>
+    <td>18204.44</td>
+    <td>442</td>
+  </tr>
+  <tr>
+    <td>0.009 ms</td>
+    <td>0.999938964844</td>
+    <td>8999558</td>
+    <td>16384.00</td>
+    <td>442</td>
+  </tr>
+  <tr>
+    <td>0.008 ms</td>
+    <td>0.999926757813</td>
+    <td>8999434</td>
+    <td>13653.33</td>
+    <td>566</td>
+  </tr>
+  <tr>
+    <td>0.007 ms</td>
+    <td>0.999914550781</td>
+    <td>8999254</td>
+    <td>11702.86</td>
+    <td>746</td>
+  </tr>
+  <tr>
+    <td>0.006 ms</td>
+    <td>0.999902343750</td>
+    <td>8999128</td>
+    <td>10240.00</td>
+    <td>872</td>
+  </tr>
+  <tr>
+    <td>0.004 ms</td>
+    <td>0.999890136719</td>
+    <td>8999021</td>
+    <td>9102.22</td>
+    <td>979</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999877929688</td>
+    <td>8998965</td>
+    <td>8192.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999853515625</td>
+    <td>8998965</td>
+    <td>6826.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999829101563</td>
+    <td>8998965</td>
+    <td>5851.43</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999804687500</td>
+    <td>8998965</td>
+    <td>5120.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999780273438</td>
+    <td>8998965</td>
+    <td>4551.11</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999755859375</td>
+    <td>8998965</td>
+    <td>4096.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999707031250</td>
+    <td>8998965</td>
+    <td>3413.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999658203125</td>
+    <td>8998965</td>
+    <td>2925.71</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999609375000</td>
+    <td>8998965</td>
+    <td>2560.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999560546875</td>
+    <td>8998965</td>
+    <td>2275.56</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999511718750</td>
+    <td>8998965</td>
+    <td>2048.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999414062500</td>
+    <td>8998965</td>
+    <td>1706.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999316406250</td>
+    <td>8998965</td>
+    <td>1462.86</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999218750000</td>
+    <td>8998965</td>
+    <td>1280.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.999121093750</td>
+    <td>8998965</td>
+    <td>1137.78</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.999023437500</mark></td>
+    <td>8998965</td>
+    <td>1024.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.998828125000</td>
+    <td>8998965</td>
+    <td>853.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.998632812500</td>
+    <td>8998965</td>
+    <td>731.43</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.998437500000</td>
+    <td>8998965</td>
+    <td>640.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.998242187500</td>
+    <td>8998965</td>
+    <td>568.89</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.998046875000</td>
+    <td>8998965</td>
+    <td>512.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.997656250000</td>
+    <td>8998965</td>
+    <td>426.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.997265625000</td>
+    <td>8998965</td>
+    <td>365.71</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.996875000000</td>
+    <td>8998965</td>
+    <td>320.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.996484375000</td>
+    <td>8998965</td>
+    <td>284.44</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.996093750000</td>
+    <td>8998965</td>
+    <td>256.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.995312500000</td>
+    <td>8998965</td>
+    <td>213.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.994531250000</td>
+    <td>8998965</td>
+    <td>182.86</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.993750000000</td>
+    <td>8998965</td>
+    <td>160.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.992968750000</td>
+    <td>8998965</td>
+    <td>142.22</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.992187500000</td>
+    <td>8998965</td>
+    <td>128.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.990625000000</mark></td>
+    <td>8998965</td>
+    <td>106.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.989062500000</td>
+    <td>8998965</td>
+    <td>91.43</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.987500000000</td>
+    <td>8998965</td>
+    <td>80.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.985937500000</td>
+    <td>8998965</td>
+    <td>71.11</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.984375000000</td>
+    <td>8998965</td>
+    <td>64.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.981250000000</td>
+    <td>8998965</td>
+    <td>53.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.978125000000</td>
+    <td>8998965</td>
+    <td>45.71</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.975000000000</td>
+    <td>8998965</td>
+    <td>40.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.971875000000</td>
+    <td>8998965</td>
+    <td>35.56</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.968750000000</td>
+    <td>8998965</td>
+    <td>32.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.962500000000</td>
+    <td>8998965</td>
+    <td>26.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.956250000000</td>
+    <td>8998965</td>
+    <td>22.86</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.950000000000</mark></td>
+    <td>8998965</td>
+    <td>20.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.943750000000</td>
+    <td>8998965</td>
+    <td>17.78</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.937500000000</td>
+    <td>8998965</td>
+    <td>16.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.925000000000</td>
+    <td>8998965</td>
+    <td>13.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.912500000000</td>
+    <td>8998965</td>
+    <td>11.43</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.900000000000</mark></td>
+    <td>8998965</td>
+    <td>10.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.887500000000</td>
+    <td>8998965</td>
+    <td>8.89</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.875000000000</td>
+    <td>8998965</td>
+    <td>8.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.850000000000</td>
+    <td>8998965</td>
+    <td>6.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.825000000000</td>
+    <td>8998965</td>
+    <td>5.71</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.800000000000</mark></td>
+    <td>8998965</td>
+    <td>5.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.775000000000</td>
+    <td>8998965</td>
+    <td>4.44</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.750000000000</td>
+    <td>8998965</td>
+    <td>4.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.700000000000</td>
+    <td>8998965</td>
+    <td>3.33</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.650000000000</td>
+    <td>8998965</td>
+    <td>2.86</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.600000000000</td>
+    <td>8998965</td>
+    <td>2.50</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.550000000000</td>
+    <td>8998965</td>
+    <td>2.22</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td><mark>0.000 ms</mark></td>
+    <td><mark>0.500000000000</mark></td>
+    <td>8998965</td>
+    <td>2.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.400000000000</td>
+    <td>8998965</td>
+    <td>1.67</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.300000000000</td>
+    <td>8998965</td>
+    <td>1.43</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.200000000000</td>
+    <td>8998965</td>
+    <td>1.25</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.100000000000</td>
+    <td>8998965</td>
+    <td>1.11</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td>0.000 ms</td>
+    <td>0.000000000000</td>
+    <td>8998965</td>
+    <td>1.00</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg: 0.000 ms</td>
+    <td>sd: 0.000 ms</td>
+    <td>p90: 0.000 ms</td>
+    <td>p95: 0.000 ms</td>
+    <td>p99: 0.000 ms</td>
+  </tr>
+</table>
+
+<h2>Percentile Response Time Distribution (LLQ)</h2>
+
+<table style="width:800px">
+  <tr>
+    <th>Value</th>
+    <th>Percentile</th>
+    <th>Total Count</th>
+    <th>Bucket Size</th>
+    <th>Percentage</th>
+    <th>Above Count</th>
+  </tr>
+  <tr>
+    <td> 100.0 μs</td>
+    <td>1.000000</td>
+    <td>9000000</td>
+    <td>2</td>
+    <td>0.000</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td> 90.0 μs</td>
+    <td>1.000000</td>
+    <td>8999998</td>
+    <td>1</td>
+    <td>0.000</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td> 60.0 μs</td>
+    <td>1.000000</td>
+    <td>8999997</td>
+    <td>1</td>
+    <td>0.000</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td> 50.0 μs</td>
+    <td>1.000000</td>
+    <td>8999996</td>
+    <td>2</td>
+    <td>0.000</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td> 45.0 μs</td>
+    <td>0.999999</td>
+    <td>8999994</td>
+    <td>6</td>
+    <td>0.000</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td> 40.0 μs</td>
+    <td>0.999999</td>
+    <td>8999988</td>
+    <td>3</td>
+    <td>0.000</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td> 35.0 μs</td>
+    <td>0.999998</td>
+    <td>8999985</td>
+    <td>3</td>
+    <td>0.000</td>
+    <td>15</td>
+  </tr>
+  <tr>
+    <td> 30.0 μs</td>
+    <td>0.999998</td>
+    <td>8999982</td>
+    <td>4</td>
+    <td>0.000</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td> 25.0 μs</td>
+    <td>0.999998</td>
+    <td>8999978</td>
+    <td>19</td>
+    <td>0.000</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td> 20.0 μs</td>
+    <td>0.999995</td>
+    <td>8999959</td>
+    <td>50</td>
+    <td>0.001</td>
+    <td>41</td>
+  </tr>
+  <tr>
+    <td> 15.0 μs</td>
+    <td>0.999990</td>
+    <td>8999909</td>
+    <td>202</td>
+    <td>0.002</td>
+    <td>91</td>
+  </tr>
+  <tr>
+    <td> 10.0 μs</td>
+    <td>0.999967</td>
+    <td>8999707</td>
+    <td>174</td>
+    <td>0.002</td>
+    <td>293</td>
+  </tr>
+  <tr>
+    <td> 9.5 μs</td>
+    <td>0.999948</td>
+    <td>8999533</td>
+    <td>68</td>
+    <td>0.001</td>
+    <td>467</td>
+  </tr>
+  <tr>
+    <td> 9.0 μs</td>
+    <td>0.999941</td>
+    <td>8999465</td>
+    <td>85</td>
+    <td>0.001</td>
+    <td>535</td>
+  </tr>
+  <tr>
+    <td> 8.5 μs</td>
+    <td>0.999931</td>
+    <td>8999380</td>
+    <td>84</td>
+    <td>0.001</td>
+    <td>620</td>
+  </tr>
+  <tr>
+    <td> 8.0 μs</td>
+    <td>0.999922</td>
+    <td>8999296</td>
+    <td>75</td>
+    <td>0.001</td>
+    <td>704</td>
+  </tr>
+  <tr>
+    <td> 7.5 μs</td>
+    <td>0.999913</td>
+    <td>8999221</td>
+    <td>61</td>
+    <td>0.001</td>
+    <td>779</td>
+  </tr>
+  <tr>
+    <td> 7.0 μs</td>
+    <td>0.999907</td>
+    <td>8999160</td>
+    <td>62</td>
+    <td>0.001</td>
+    <td>840</td>
+  </tr>
+  <tr>
+    <td> 6.5 μs</td>
+    <td>0.999900</td>
+    <td>8999098</td>
+    <td>36</td>
+    <td>0.000</td>
+    <td>902</td>
+  </tr>
+  <tr>
+    <td> 6.0 μs</td>
+    <td>0.999896</td>
+    <td>8999062</td>
+    <td>24</td>
+    <td>0.000</td>
+    <td>938</td>
+  </tr>
+  <tr>
+    <td> 5.5 μs</td>
+    <td>0.999893</td>
+    <td>8999038</td>
+    <td>11</td>
+    <td>0.000</td>
+    <td>962</td>
+  </tr>
+  <tr>
+    <td> 5.0 μs</td>
+    <td>0.999892</td>
+    <td>8999027</td>
+    <td>18</td>
+    <td>0.000</td>
+    <td>973</td>
+  </tr>
+  <tr>
+    <td> 4.5 μs</td>
+    <td>0.999890</td>
+    <td>8999009</td>
+    <td>13</td>
+    <td>0.000</td>
+    <td>991</td>
+  </tr>
+  <tr>
+    <td> 4.0 μs</td>
+    <td>0.999888</td>
+    <td>8998996</td>
+    <td>21</td>
+    <td>0.000</td>
+    <td>1004</td>
+  </tr>
+  <tr>
+    <td> 3.5 μs</td>
+    <td>0.999886</td>
+    <td>8998975</td>
+    <td>6</td>
+    <td>0.000</td>
+    <td>1025</td>
+  </tr>
+  <tr>
+    <td> 3.0 μs</td>
+    <td>0.999885</td>
+    <td>8998969</td>
+    <td>1</td>
+    <td>0.000</td>
+    <td>1031</td>
+  </tr>
+  <tr>
+    <td> 1.0 μs</td>
+    <td>0.999885</td>
+    <td>8998968</td>
+    <td>3</td>
+    <td>0.000</td>
+    <td>1032</td>
+  </tr>
+  <tr>
+    <td> 950 ns</td>
+    <td>0.999885</td>
+    <td>8998965</td>
+    <td>1</td>
+    <td>0.000</td>
+    <td>1035</td>
+  </tr>
+  <tr>
+    <td> 900 ns</td>
+    <td>0.999885</td>
+    <td>8998964</td>
+    <td>2</td>
+    <td>0.000</td>
+    <td>1036</td>
+  </tr>
+  <tr>
+    <td> 850 ns</td>
+    <td>0.999885</td>
+    <td>8998962</td>
+    <td>28</td>
+    <td>0.000</td>
+    <td>1038</td>
+  </tr>
+  <tr>
+    <td> 800 ns</td>
+    <td>0.999882</td>
+    <td>8998934</td>
+    <td>99</td>
+    <td>0.001</td>
+    <td>1066</td>
+  </tr>
+  <tr>
+    <td> 750 ns</td>
+    <td>0.999871</td>
+    <td>8998835</td>
+    <td>1318</td>
+    <td>0.015</td>
+    <td>1165</td>
+  </tr>
+  <tr>
+    <td> 700 ns</td>
+    <td>0.999724</td>
+    <td>8997517</td>
+    <td>2877</td>
+    <td>0.032</td>
+    <td>2483</td>
+  </tr>
+  <tr>
+    <td> 650 ns</td>
+    <td>0.999404</td>
+    <td>8994640</td>
+    <td>18134</td>
+    <td>0.201</td>
+    <td>5360</td>
+  </tr>
+  <tr>
+    <td> 600 ns</td>
+    <td>0.997390</td>
+    <td>8976506</td>
+    <td>29064</td>
+    <td>0.323</td>
+    <td>23494</td>
+  </tr>
+  <tr>
+    <td> 550 ns</td>
+    <td>0.994160</td>
+    <td>8947442</td>
+    <td>8290</td>
+    <td>0.092</td>
+    <td>52558</td>
+  </tr>
+  <tr>
+    <td> 500 ns</td>
+    <td>0.993239</td>
+    <td>8939152</td>
+    <td>19714</td>
+    <td>0.219</td>
+    <td>60848</td>
+  </tr>
+  <tr>
+    <td> 450 ns</td>
+    <td>0.991049</td>
+    <td>8919438</td>
+    <td>8938</td>
+    <td>0.099</td>
+    <td>80562</td>
+  </tr>
+  <tr>
+    <td> 400 ns</td>
+    <td>0.990056</td>
+    <td>8910500</td>
+    <td>5418</td>
+    <td>0.060</td>
+    <td>89500</td>
+  </tr>
+  <tr>
+    <td> 350 ns</td>
+    <td>0.989454</td>
+    <td>8905082</td>
+    <td>5116</td>
+    <td>0.057</td>
+    <td>94918</td>
+  </tr>
+  <tr>
+    <td> 300 ns</td>
+    <td>0.988885</td>
+    <td>8899966</td>
+    <td>5755</td>
+    <td>0.064</td>
+    <td>100034</td>
+  </tr>
+  <tr>
+    <td> 250 ns</td>
+    <td>0.988246</td>
+    <td>8894211</td>
+    <td>13519</td>
+    <td>0.150</td>
+    <td>105789</td>
+  </tr>
+  <tr>
+    <td> 200 ns</td>
+    <td>0.986744</td>
+    <td>8880692</td>
+    <td>6121</td>
+    <td>0.068</td>
+    <td>119308</td>
+  </tr>
+  <tr>
+    <td> 150 ns</td>
+    <td>0.986063</td>
+    <td>8874571</td>
+    <td>157014</td>
+    <td><mark>1.745</mark></td>
+    <td>125429</td>
+  </tr>
+  <tr>
+    <td> 100 ns</td>
+    <td>0.968617</td>
+    <td>8717557</td>
+    <td>1908111</td>
+    <td><mark>21.201</mark></td>
+    <td>282443</td>
+  </tr>
+  <tr>
+    <td> 95 ns</td>
+    <td>0.756605</td>
+    <td>6809446</td>
+    <td>770718</td>
+    <td><mark>8.564</mark></td>
+    <td>2190554</td>
+  </tr>
+  <tr>
+    <td> 90 ns</td>
+    <td>0.670970</td>
+    <td>6038728</td>
+    <td>566177</td>
+    <td><mark>6.291</mark></td>
+    <td>2961272</td>
+  </tr>
+  <tr>
+    <td> 85 ns</td>
+    <td>0.608061</td>
+    <td>5472551</td>
+    <td>837867</td>
+    <td><mark>9.310</mark></td>
+    <td>3527449</td>
+  </tr>
+  <tr>
+    <td> 80 ns</td>
+    <td>0.514965</td>
+    <td>4634684</td>
+    <td>636813</td>
+    <td><mark>7.076</mark></td>
+    <td>4365316</td>
+  </tr>
+  <tr>
+    <td> 75 ns</td>
+    <td>0.444208</td>
+    <td>3997871</td>
+    <td>625797</td>
+    <td><mark>6.953</mark></td>
+    <td>5002129</td>
+  </tr>
+  <tr>
+    <td> 70 ns</td>
+    <td>0.374675</td>
+    <td>3372074</td>
+    <td>489626</td>
+    <td><mark>5.440</mark></td>
+    <td>5627926</td>
+  </tr>
+  <tr>
+    <td> 65 ns</td>
+    <td>0.320272</td>
+    <td>2882448</td>
+    <td>414752</td>
+    <td><mark>4.608</mark></td>
+    <td>6117552</td>
+  </tr>
+  <tr>
+    <td> 60 ns</td>
+    <td>0.274188</td>
+    <td>2467696</td>
+    <td>383840</td>
+    <td><mark>4.265</mark></td>
+    <td>6532304</td>
+  </tr>
+  <tr>
+    <td> 55 ns</td>
+    <td>0.231540</td>
+    <td>2083856</td>
+    <td>352282</td>
+    <td><mark>3.914</mark></td>
+    <td>6916144</td>
+  </tr>
+  <tr>
+    <td> 50 ns</td>
+    <td>0.192397</td>
+    <td>1731574</td>
+    <td>363000</td>
+    <td><mark>4.033</mark></td>
+    <td>7268426</td>
+  </tr>
+  <tr>
+    <td> 45 ns</td>
+    <td>0.152064</td>
+    <td>1368574</td>
+    <td>393984</td>
+    <td><mark>4.378</mark></td>
+    <td>7631426</td>
+  </tr>
+  <tr>
+    <td> 40 ns</td>
+    <td>0.108288</td>
+    <td>974590</td>
+    <td>527093</td>
+    <td><mark>5.857</mark></td>
+    <td>8025410</td>
+  </tr>
+  <tr>
+    <td> 35 ns</td>
+    <td>0.049722</td>
+    <td>447497</td>
+    <td>284560</td>
+    <td><mark>3.162</mark></td>
+    <td>8552503</td>
+  </tr>
+  <tr>
+    <td> 30 ns</td>
+    <td>0.018104</td>
+    <td>162937</td>
+    <td>117677</td>
+    <td><mark>1.308</mark></td>
+    <td>8837063</td>
+  </tr>
+  <tr>
+    <td> 25 ns</td>
+    <td>0.005029</td>
+    <td>45260</td>
+    <td>39916</td>
+    <td>0.444</td>
+    <td>8954740</td>
+  </tr>
+  <tr>
+    <td> 20 ns</td>
+    <td>0.000594</td>
+    <td>5344</td>
+    <td>5344</td>
+    <td>0.059</td>
+    <td>8994656</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg:  83 ns</td>
+    <td>sd:  155 ns</td>
+    <td>p50:  80 ns</td>
+    <td>p90:  100 ns</td>
+    <td>p95:  100 ns</td>
+    <td>p99:  400 ns</td>
+  </tr>
+
+</table>
+

@@ -1,0 +1,313 @@
+= Demo Benchmark
+:toc: left
+:sectnums:
+:source-highlighter: rouge
+
+// :source-highlighter: highlight.js
+// :plantuml: http://localhost:8080/plantuml
+// :plantuml-fetch-diagram: true
+// :plantuml-size-limit: 8192
+// :plantuml: plantuml.com/plantuml
+// :diagram-server-url: https://kroki.io/
+// :diagram-server-type: kroki_io
+
+Filename::
+  benchmark_config_test.jsonc
+
+== Actions
+
+=== Configuration
+
+[%header,cols="1a,4a"]
+|===
+| id | value
+| *description*
+| Demo Benchmark
+| *output_filename*
+| benchmark_output.json
+| *report_filename*
+| benchmark_report.html
+| *user_class*
+| org.example.user.DemoUser
+| *user_params*
+|
+[%header,cols="1a,3a"]
+!===
+! id ! value 
+! *url* ! http://localhost:7070
+!===
+| *user_actions*
+|
+[%header,cols="2a,2a,4a"]
+!===
+! id ! value ! description
+! *0* ! onStart! 
+! *1* ! DELAY-10ms! 
+! *2* ! DELAY-20ms! 
+! *3* ! NOP! 
+! *100* ! onStop! 
+!===
+|===
+
+== Contexts
+
+=== Context-0
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | True
+| *num_users*   | 4
+| *num_threads* | 2
+|===
+=== Context-1
+
+[%header,cols="1a,2a"]
+|===
+| id | value 
+| *enabled* | False
+| *num_users*   | 4
+| *num_threads* | 4
+|===
+
+== Benchmarks
+
+=== onStart
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 0
+! - 
+!===
+|===
+
+=== NOP
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 100000.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 3
+! - 
+!===
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 5 seconds
+! *warmup_duration*
+! 10 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== Maximum Rate
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 1
+! 90 
+! 2
+! 10 
+!===
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 5 seconds
+! *warmup_duration*
+! 10 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== Fixed Rate
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 100.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 1
+! 90 
+! 2
+! 10 
+!===
+| *time* 
+| 
+[%noheader,cols="2a,1a"]
+!===
+! *pre_warmup_duration*
+! 5 seconds
+! *warmup_duration*
+! 10 seconds
+! *benchmark_duration*
+! 30 seconds
+! *benchmark_iterations*
+! 3
+!===
+|===
+
+=== onStop
+
+[%header,cols="1a,2a"]
+|===
+| id | value
+| *enabled* | True
+| *aps_rate* | 0.0
+| *worker_thread_queue_size* | 0
+| *scenario_actions* 
+| 
+[%header,cols="1a,2a"]
+!===
+! id ! weight 
+! 100
+! - 
+!===
+|===
+
+== JSON Configuration File
+
+[source,json,linenums]
+----
+{
+    "actions": {
+        "description": "Demo Benchmark", 
+        "output_filename": "benchmark_output.json", 
+        "report_filename": "benchmark_report.html", 
+        "user_class": "org.example.user.DemoUser", 
+        "user_params": {
+            "url": "http://localhost:7070"
+        }, 
+        "user_actions": {
+            "0": "onStart", 
+            "1": "DELAY-10ms", 
+            "2": "DELAY-20ms", 
+            "3": "NOP", 
+            "100": "onStop"
+        }
+    }, 
+    "contexts": {
+        "Context-0": {
+            "enabled": true, 
+            "num_users": 4, 
+            "num_threads": 2
+        }, 
+        "Context-1": {
+            "enabled": false, 
+            "num_users": 4, 
+            "num_threads": 4
+        }
+    }, 
+    "benchmarks": {
+        "onStart": {
+            "scenario_actions": [
+                {
+                    "id": 0
+                }
+            ]
+        }, 
+        "NOP": {
+            "enabled": true, 
+            "time": {
+                "pre_warmup_duration": 5, 
+                "warmup_duration": 10, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "aps_rate": 100000.0, 
+            "scenario_actions": [
+                {
+                    "id": 3
+                }
+            ]
+        }, 
+        "Maximum Rate": {
+            "enabled": true, 
+            "time": {
+                "pre_warmup_duration": 5, 
+                "warmup_duration": 10, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "aps_rate": 0.0, 
+            "scenario_actions": [
+                {
+                    "id": 1, 
+                    "weight": 90
+                }, 
+                {
+                    "id": 2, 
+                    "weight": 10
+                }
+            ]
+        }, 
+        "Fixed Rate": {
+            "enabled": true, 
+            "time": {
+                "pre_warmup_duration": 5, 
+                "warmup_duration": 10, 
+                "benchmark_duration": 30, 
+                "benchmark_iterations": 3
+            }, 
+            "aps_rate": 100.0, 
+            "scenario_actions": [
+                {
+                    "id": 1, 
+                    "weight": 90
+                }, 
+                {
+                    "id": 2, 
+                    "weight": 10
+                }
+            ]
+        }, 
+        "onStop": {
+            "scenario_actions": [
+                {
+                    "id": 100
+                }
+            ]
+        }
+    }
+}
+----

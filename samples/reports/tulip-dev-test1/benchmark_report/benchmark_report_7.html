@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+    div.histo {
+         display: none
+    }
+</style>
+
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
+    // Load the Visualization API and the corechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawInitialChart);
+
+    var chartData = null;
+    var chart = null;
+
+    function setChartData(names, histos) {
+        while (names.length < histos.length) {
+            names.push('Unknown');
+        }
+
+        var series = [];
+        for (var i = 0; i < histos.length; i++) {
+            series = appendDataSeries(histos[i], names[i], series);
+        }
+
+        chartData = google.visualization.arrayToDataTable(series);
+    }
+
+
+    function drawInitialChart() {
+        // Connect the choose files button:
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        // Load some static example data:
+    var data1Str = document.querySelector("div#data_1").innerHTML.trim();
+    var data2Str = document.querySelector("div#data_2").innerHTML.trim();
+    var data3Str = document.querySelector("div#data_3").innerHTML.trim();
+    var data4Str = document.querySelector("div#data_4").innerHTML.trim();
+    var data5Str = document.querySelector("div#data_5").innerHTML.trim();
+    var data0Str = document.querySelector("div#data_0").innerHTML.trim();
+    var histos = [data1Str, data2Str, data3Str, data4Str, data5Str, data0Str];
+    var names = ['A3', 'A4', 'A5', 'A6', 'A7', 'S'];
+    setChartData(names, histos);
+    drawChart();
+    }
+
+    var maxPercentile = 1000000;
+
+    function drawChart() {
+
+        var ticks =
+                [{v:1,f:'0%'},
+                    {v:10,f:'90%'},
+                    {v:100,f:'99%'},
+                    {v:1000,f:'99.9%'},
+                    {v:10000,f:'99.99%'},
+                    {v:100000,f:'99.999%'},
+                    {v:1000000,f:'99.9999%'},
+                    {v:10000000,f:'99.99999%'},
+                    {v:100000000,f:'99.999999%'}];
+
+        var unitSelection = document.getElementById("timeUnitSelection");
+        var unitSelIndex = unitSelection.selectedIndex;
+        var unitText = unitSelection.options[unitSelIndex].innerHTML;
+
+        var options = {
+//            title: 'Percentile Response Time Distribution',
+            height: 480,
+//            hAxis: {title: 'Percentile', minValue: 0, logScale: true, ticks:ticks },
+            hAxis: {
+                title: "Percentile",
+                minValue: 1, logScale: true, ticks:ticks,
+                viewWindowMode:'explicit',
+                viewWindow:{
+                    max:maxPercentile,
+                    min:1
+                }
+            },
+            vAxis: {title: 'Latency (' + unitText + ')', minValue: 0 },
+            legend: {position: 'bottom'}
+        };
+
+
+        // add tooltips with correct percentile text to data:
+        var columns = [0];
+        for (var i = 1; i < chartData.getNumberOfColumns(); i++) {
+            columns.push(i);
+            columns.push({
+                type: 'string',
+                properties: {
+                    role: 'tooltip'
+                },
+                calc: (function (j) {
+                    return function (dt, row) {
+                        var percentile = 100.0 - (100.0/dt.getValue(row, 0));
+                        return dt.getColumnLabel(j) + ': ' +
+                                percentile.toPrecision(7) +
+                                '\%\'ile = ' + dt.getValue(row, j) + ' ' + unitText
+                    }
+                })(i)
+            });
+        }
+        var view = new google.visualization.DataView(chartData);
+        view.setColumns(columns);
+
+        chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(view, options);
+
+        google.visualization.events.addListener(chart, 'ready', function () {
+            chart_div.innerHTML = '<img src="' + chart.getImageURI() + '">';
+        });
+
+    }
+</script>
+<script type="text/javascript">
+    function appendDataSeries(histo, name, dataSeries) {
+        var series;
+        var seriesCount;
+        if (dataSeries.length == 0) {
+            series = [ ['X', name] ];
+            seriesCount = 1;
+        } else {
+            series = dataSeries;
+            series[0].push(name);
+            seriesCount = series[0].length - 1;
+        }
+
+        var lines = histo.split("\n");
+
+        var seriesIndex = 1;
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            var values = line.trim().split(/[ ]+/);
+
+            if (line[0] != '#' && values.length == 4) {
+
+                var y = parseFloat(values[0]);
+                var x = parseFloat(values[3]);
+
+                if (!isNaN(x) && !isNaN(y)) {
+
+                    if (seriesIndex >= series.length) {
+                        series.push([x]);
+                    }
+
+                    while (series[seriesIndex].length < seriesCount) {
+                        series[seriesIndex].push(null);
+                    }
+
+                    series[seriesIndex].push(y);
+                    seriesIndex++;
+                }
+            }
+        }
+
+        while (seriesIndex < series.length) {
+            series[seriesIndex].push(null);
+            seriesIndex++;
+        }
+
+        return series;
+    }
+</script>
+<script>
+    function timeUnitsSelected(evt) {
+        drawChart();
+        return {typed: ''};
+    }
+
+    function doExport(event) {
+        saveSvgAsPng(document.querySelector('svg'), 'Histogram', 2.0);
+        return {typed: ''};
+    }
+</script>
+
+<script>
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+        var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+        var names = [];
+        var histos = [];
+
+        fileDisplayArea.innerText = "file selected...\n";
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader();
+
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    histos.push(e.target.result);
+                    names.push(escape(theFile.name));
+                    fileDisplayArea.innerText = " Plotting input from: " + names + "\n";
+                    setChartData(names, histos);
+                    drawChart();
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsText(f);
+        }
+
+    }
+
+</script>
+
+<script type="text/javascript">
+    (function() {
+        var out$ = typeof exports != 'undefined' && exports || this;
+
+        var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+
+        function inlineImages(callback) {
+            var images = document.querySelectorAll('svg image');
+            var left = images.length;
+            if (left == 0) {
+                callback();
+            }
+            for (var i = 0; i < images.length; i++) {
+                (function(image) {
+                    if (image.getAttribute('xlink:href')) {
+                        var href = image.getAttribute('xlink:href').value;
+                        if (/^http/.test(href) && !(new RegExp('^' + window.location.host).test(href))) {
+                            throw new Error("Cannot render embedded images linking to external hosts.");
+                        }
+                    }
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    var img = new Image();
+                    img.src = image.getAttribute('xlink:href');
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        image.setAttribute('xlink:href', canvas.toDataURL('image/png'));
+                        left--;
+                        if (left == 0) {
+                            callback();
+                        }
+                    }
+                })(images[i]);
+            }
+        }
+
+        function styles(dom) {
+            var css = "";
+            var sheets = document.styleSheets;
+            for (var i = 0; i < sheets.length; i++) {
+                if (sheets[i].hasOwnProperty('cssRules')) {
+                    var rules = sheets[i].cssRules;
+                    for (var j = 0; j < rules.length; j++) {
+                        var rule = rules[j];
+                        if (typeof(rule.style) != "undefined") {
+                            css += rule.selectorText + " { " + rule.style.cssText + " }\n";
+                        }
+                    }
+                }
+            }
+
+            var s = document.createElement('style');
+            s.setAttribute('type', 'text/css');
+            s.innerHTML = "<![CDATA[\n" + css + "\n]]>";
+
+            var defs = document.createElement('defs');
+            defs.appendChild(s);
+            return defs;
+        }
+
+        out$.svgAsDataUri = function(el, scaleFactor, cb) {
+            scaleFactor = scaleFactor || 1;
+
+            inlineImages(function() {
+                var outer = document.createElement("div");
+                var clone = el.cloneNode(true);
+                var width = parseInt(
+                        clone.getAttribute('width')
+                        || clone.style.width
+                        || out$.getComputedStyle(el).getPropertyValue('width')
+                );
+                var height = parseInt(
+                        clone.getAttribute('height')
+                        || clone.style.height
+                        || out$.getComputedStyle(el).getPropertyValue('height')
+                );
+
+                var xmlns = "http://www.w3.org/2000/xmlns/";
+
+                clone.setAttribute("version", "1.1");
+                clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
+                clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+                clone.setAttribute("width", width * scaleFactor);
+                clone.setAttribute("height", height * scaleFactor);
+                clone.setAttribute("viewBox", "0 0 " + width + " " + height);
+                outer.appendChild(clone);
+
+                clone.insertBefore(styles(clone), clone.firstChild);
+
+                var svg = doctype + outer.innerHTML;
+                var uri = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svg)));
+                if (cb) {
+                    cb(uri);
+                }
+            });
+        }
+
+        out$.saveSvgAsPng = function(el, name, scaleFactor) {
+            out$.svgAsDataUri(el, scaleFactor, function(uri) {
+                var image = new Image();
+                image.src = uri;
+                image.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(image, 0, 0);
+
+                    var a = document.createElement('a');
+                    a.download = name;
+                    a.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(a);
+                    a.click();
+                }
+            });
+        }
+    })();
+</script>
+
+<style>
+    .slider-width500
+    {
+        width: 500px;
+    }
+</style>
+
+</head>
+
+<body>
+
+
+<h2>Actions per Second</h2>
+  <div id="main" style="width: 100%;height:400px;"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
+  <script src="benchmark_report_7_t.js"></script>
+<h2>Response Times (ms)</h2>
+  <div id="main_p" style="width: 100%;height:400px;"></div>
+  <script src="benchmark_report_7_p.js"></script>
+
+
+<h2>Percentile Response Time Distribution</h2>
+
+<input type="file" id="files" name="files[]" multiple />
+
+<pre id="fileDisplayArea">Please select file(s) above.</pre>
+
+<!--Div that will hold the chart-->
+<div id="chart_div">None Loaded</div>
+
+Latency time units:
+<select name="units" size="1" id="timeUnitSelection" onChange="timeUnitsSelected()">
+    <option value="Latency (seconds)">seconds</option>
+    <option selected value="Latency (milliseconds)">milliseconds</option>
+    <option value="Latency (qs)">microseconds</option>
+    <option value="Latency (nanoseconds)">nanoseconds</option>
+</select>
+<button type='button' onclick='doExport(event)'>Export Image</button>
+
+&nbsp; &nbsp; &nbsp; &nbsp;
+<p>
+Percentile range:
+
+<input type="range" class="slider-width500"
+       min="1" max="8" value="7" step="1"
+       width="300px"
+       onchange="showValue(this.value)" />
+<span id="percentileRange">99.99999%</span>
+<script type="text/javascript">
+    function showValue(newValue) {
+        var x = Math.pow(10, newValue);
+        var percentile = 100.0 - (100.0 / x);
+        document.getElementById("percentileRange").innerHTML=percentile + "%";
+        maxPercentile = x;
+        drawChart();
+        return {typed: ''};
+    }
+</script>
+</p>
+
+<div id="data_1" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.092 0.000000000000          1           1.00
+       0.146 0.100000000000       2303           1.11
+       0.163 0.200000000000       4508           1.25
+       0.187 0.300000000000       6774           1.43
+       0.257 0.400000000000       8999           1.67
+       0.420 0.500000000000      11279           2.00
+       0.438 0.550000000000      12389           2.22
+       0.453 0.600000000000      13500           2.50
+       0.467 0.650000000000      14687           2.86
+       0.479 0.700000000000      15809           3.33
+       0.491 0.750000000000      16892           4.00
+       0.498 0.775000000000      17452           4.44
+       0.506 0.800000000000      18053           5.00
+       0.515 0.825000000000      18595           5.71
+       0.524 0.850000000000      19139           6.67
+       0.536 0.875000000000      19693           8.00
+       0.545 0.887500000000      19975           8.89
+       0.555 0.900000000000      20265          10.00
+       0.567 0.912500000000      20538          11.43
+       0.578 0.925000000000      20815          13.33
+       0.590 0.937500000000      21100          16.00
+       0.596 0.943750000000      21238          17.78
+       0.604 0.950000000000      21376          20.00
+       0.613 0.956250000000      21526          22.86
+       0.624 0.962500000000      21656          26.67
+       0.635 0.968750000000      21802          32.00
+       0.641 0.971875000000      21867          35.56
+       0.649 0.975000000000      21940          40.00
+       0.657 0.978125000000      22008          45.71
+       0.667 0.981250000000      22077          53.33
+       0.685 0.984375000000      22150          64.00
+       0.694 0.985937500000      22182          71.11
+       0.707 0.987500000000      22215          80.00
+       0.724 0.989062500000      22250          91.43
+       0.745 0.990625000000      22286         106.67
+       0.780 0.992187500000      22321         128.00
+       0.798 0.992968750000      22338         142.22
+       0.817 0.993750000000      22356         160.00
+       0.847 0.994531250000      22373         182.86
+       0.889 0.995312500000      22391         213.33
+       1.021 0.996093750000      22409         256.00
+       1.081 0.996484375000      22417         284.44
+       1.112 0.996875000000      22426         320.00
+       1.181 0.997265625000      22435         365.71
+       1.274 0.997656250000      22444         426.67
+       1.554 0.998046875000      22453         512.00
+       1.664 0.998242187500      22457         568.89
+       1.802 0.998437500000      22461         640.00
+       2.219 0.998632812500      22466         731.43
+       2.331 0.998828125000      22470         853.33
+       2.543 0.999023437500      22475        1024.00
+       2.569 0.999121093750      22477        1137.78
+       2.689 0.999218750000      22479        1280.00
+       2.891 0.999316406250      22481        1462.86
+       2.901 0.999414062500      22483        1706.67
+       3.007 0.999511718750      22486        2048.00
+       3.103 0.999560546875      22487        2275.56
+       3.179 0.999609375000      22488        2560.00
+       3.185 0.999658203125      22489        2925.71
+       3.207 0.999707031250      22490        3413.33
+       3.209 0.999755859375      22491        4096.00
+       3.289 0.999780273438      22492        4551.11
+       3.289 0.999804687500      22492        5120.00
+       3.303 0.999829101563      22493        5851.43
+       3.303 0.999853515625      22493        6826.67
+       8.431 0.999877929688      22494        8192.00
+       8.431 0.999890136719      22494        9102.22
+       8.431 0.999902343750      22494       10240.00
+      13.447 0.999914550781      22495       11702.86
+      13.447 0.999926757813      22495       13653.33
+      13.447 0.999938964844      22495       16384.00
+      13.447 0.999945068359      22495       18204.44
+      13.447 0.999951171875      22495       20480.00
+      31.055 0.999957275391      22496       23405.71
+      31.055 1.000000000000      22496
+#[Mean    =        0.364, StdDeviation   =        0.301]
+#[Max     =       31.055, Total count    =        22496]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_2" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.094 0.000000000000          1           1.00
+       0.148 0.100000000000       2331           1.11
+       0.165 0.200000000000       4510           1.25
+       0.190 0.300000000000       6765           1.43
+       0.259 0.400000000000       9006           1.67
+       0.424 0.500000000000      11253           2.00
+       0.443 0.550000000000      12443           2.22
+       0.457 0.600000000000      13506           2.50
+       0.471 0.650000000000      14667           2.86
+       0.483 0.700000000000      15797           3.33
+       0.496 0.750000000000      16934           4.00
+       0.503 0.775000000000      17506           4.44
+       0.511 0.800000000000      18015           5.00
+       0.521 0.825000000000      18619           5.71
+       0.531 0.850000000000      19161           6.67
+       0.544 0.875000000000      19712           8.00
+       0.552 0.887500000000      19982           8.89
+       0.562 0.900000000000      20276          10.00
+       0.573 0.912500000000      20549          11.43
+       0.584 0.925000000000      20838          13.33
+       0.594 0.937500000000      21097          16.00
+       0.601 0.943750000000      21240          17.78
+       0.609 0.950000000000      21387          20.00
+       0.617 0.956250000000      21527          22.86
+       0.627 0.962500000000      21659          26.67
+       0.639 0.968750000000      21809          32.00
+       0.647 0.971875000000      21874          35.56
+       0.656 0.975000000000      21945          40.00
+       0.665 0.978125000000      22011          45.71
+       0.683 0.981250000000      22089          53.33
+       0.699 0.984375000000      22151          64.00
+       0.710 0.985937500000      22187          71.11
+       0.725 0.987500000000      22222          80.00
+       0.754 0.989062500000      22260          91.43
+       0.788 0.990625000000      22293         106.67
+       0.819 0.992187500000      22327         128.00
+       0.849 0.992968750000      22345         142.22
+       0.887 0.993750000000      22362         160.00
+       0.930 0.994531250000      22379         182.86
+       1.051 0.995312500000      22397         213.33
+       1.115 0.996093750000      22415         256.00
+       1.164 0.996484375000      22423         284.44
+       1.211 0.996875000000      22432         320.00
+       1.253 0.997265625000      22441         365.71
+       1.336 0.997656250000      22450         426.67
+       1.755 0.998046875000      22459         512.00
+       1.870 0.998242187500      22463         568.89
+       1.973 0.998437500000      22467         640.00
+       2.139 0.998632812500      22472         731.43
+       2.279 0.998828125000      22476         853.33
+       2.481 0.999023437500      22481        1024.00
+       2.529 0.999121093750      22483        1137.78
+       2.569 0.999218750000      22485        1280.00
+       2.803 0.999316406250      22487        1462.86
+       2.985 0.999414062500      22489        1706.67
+       3.051 0.999511718750      22492        2048.00
+       3.153 0.999560546875      22494        2275.56
+       3.153 0.999609375000      22494        2560.00
+       3.231 0.999658203125      22495        2925.71
+       3.271 0.999707031250      22496        3413.33
+       3.311 0.999755859375      22497        4096.00
+       3.387 0.999780273438      22498        4551.11
+       3.387 0.999804687500      22498        5120.00
+       3.627 0.999829101563      22499        5851.43
+       3.627 0.999853515625      22499        6826.67
+       7.219 0.999877929688      22500        8192.00
+       7.219 0.999890136719      22500        9102.22
+       7.219 0.999902343750      22500       10240.00
+       8.823 0.999914550781      22501       11702.86
+       8.823 0.999926757813      22501       13653.33
+       8.823 0.999938964844      22501       16384.00
+       8.823 0.999945068359      22501       18204.44
+       8.823 0.999951171875      22501       20480.00
+      38.047 0.999957275391      22502       23405.71
+      38.047 1.000000000000      22502
+#[Mean    =        0.368, StdDeviation   =        0.329]
+#[Max     =       38.047, Total count    =        22502]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_3" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.093 0.000000000000          1           1.00
+       0.147 0.100000000000       2327           1.11
+       0.164 0.200000000000       4510           1.25
+       0.188 0.300000000000       6753           1.43
+       0.255 0.400000000000       9011           1.67
+       0.421 0.500000000000      11272           2.00
+       0.440 0.550000000000      12405           2.22
+       0.455 0.600000000000      13532           2.50
+       0.469 0.650000000000      14713           2.86
+       0.481 0.700000000000      15814           3.33
+       0.494 0.750000000000      16951           4.00
+       0.501 0.775000000000      17523           4.44
+       0.508 0.800000000000      18006           5.00
+       0.517 0.825000000000      18611           5.71
+       0.526 0.850000000000      19138           6.67
+       0.538 0.875000000000      19696           8.00
+       0.547 0.887500000000      19982           8.89
+       0.556 0.900000000000      20256          10.00
+       0.566 0.912500000000      20542          11.43
+       0.577 0.925000000000      20841          13.33
+       0.589 0.937500000000      21102          16.00
+       0.596 0.943750000000      21248          17.78
+       0.603 0.950000000000      21379          20.00
+       0.613 0.956250000000      21531          22.86
+       0.623 0.962500000000      21665          26.67
+       0.634 0.968750000000      21800          32.00
+       0.642 0.971875000000      21879          35.56
+       0.651 0.975000000000      21950          40.00
+       0.659 0.978125000000      22012          45.71
+       0.673 0.981250000000      22085          53.33
+       0.689 0.984375000000      22152          64.00
+       0.702 0.985937500000      22188          71.11
+       0.716 0.987500000000      22222          80.00
+       0.741 0.989062500000      22257          91.43
+       0.765 0.990625000000      22294         106.67
+       0.797 0.992187500000      22330         128.00
+       0.821 0.992968750000      22346         142.22
+       0.851 0.993750000000      22363         160.00
+       0.930 0.994531250000      22380         182.86
+       1.053 0.995312500000      22398         213.33
+       1.122 0.996093750000      22416         256.00
+       1.173 0.996484375000      22424         284.44
+       1.222 0.996875000000      22433         320.00
+       1.314 0.997265625000      22442         365.71
+       1.515 0.997656250000      22451         426.67
+       1.756 0.998046875000      22461         512.00
+       1.810 0.998242187500      22464         568.89
+       1.855 0.998437500000      22468         640.00
+       2.049 0.998632812500      22473         731.43
+       2.161 0.998828125000      22477         853.33
+       2.265 0.999023437500      22482        1024.00
+       2.305 0.999121093750      22484        1137.78
+       2.457 0.999218750000      22486        1280.00
+       2.545 0.999316406250      22488        1462.86
+       2.597 0.999414062500      22490        1706.67
+       2.733 0.999511718750      22493        2048.00
+       2.767 0.999560546875      22494        2275.56
+       2.829 0.999609375000      22495        2560.00
+       2.945 0.999658203125      22496        2925.71
+       3.089 0.999707031250      22497        3413.33
+       3.279 0.999755859375      22498        4096.00
+       3.303 0.999780273438      22499        4551.11
+       3.303 0.999804687500      22499        5120.00
+       3.425 0.999829101563      22500        5851.43
+       3.425 0.999853515625      22500        6826.67
+       3.557 0.999877929688      22501        8192.00
+       3.557 0.999890136719      22501        9102.22
+       3.557 0.999902343750      22501       10240.00
+       6.755 0.999914550781      22502       11702.86
+       6.755 0.999926757813      22502       13653.33
+       6.755 0.999938964844      22502       16384.00
+       6.755 0.999945068359      22502       18204.44
+       6.755 0.999951171875      22502       20480.00
+       7.735 0.999957275391      22503       23405.71
+       7.735 1.000000000000      22503
+#[Mean    =        0.364, StdDeviation   =        0.207]
+#[Max     =        7.735, Total count    =        22503]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_4" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.094 0.000000000000          1           1.00
+       0.149 0.100000000000       2327           1.11
+       0.166 0.200000000000       4589           1.25
+       0.190 0.300000000000       6794           1.43
+       0.258 0.400000000000       9012           1.67
+       0.425 0.500000000000      11294           2.00
+       0.444 0.550000000000      12401           2.22
+       0.461 0.600000000000      13583           2.50
+       0.474 0.650000000000      14665           2.86
+       0.486 0.700000000000      15776           3.33
+       0.499 0.750000000000      16913           4.00
+       0.506 0.775000000000      17467           4.44
+       0.515 0.800000000000      18077           5.00
+       0.523 0.825000000000      18589           5.71
+       0.533 0.850000000000      19136           6.67
+       0.548 0.875000000000      19714           8.00
+       0.557 0.887500000000      19995           8.89
+       0.566 0.900000000000      20252          10.00
+       0.577 0.912500000000      20548          11.43
+       0.587 0.925000000000      20836          13.33
+       0.598 0.937500000000      21108          16.00
+       0.605 0.943750000000      21246          17.78
+       0.612 0.950000000000      21377          20.00
+       0.621 0.956250000000      21538          22.86
+       0.629 0.962500000000      21659          26.67
+       0.639 0.968750000000      21802          32.00
+       0.647 0.971875000000      21875          35.56
+       0.657 0.975000000000      21946          40.00
+       0.665 0.978125000000      22011          45.71
+       0.678 0.981250000000      22083          53.33
+       0.697 0.984375000000      22153          64.00
+       0.705 0.985937500000      22185          71.11
+       0.719 0.987500000000      22220          80.00
+       0.743 0.989062500000      22256          91.43
+       0.766 0.990625000000      22291         106.67
+       0.807 0.992187500000      22326         128.00
+       0.833 0.992968750000      22343         142.22
+       0.867 0.993750000000      22361         160.00
+       0.914 0.994531250000      22378         182.86
+       1.020 0.995312500000      22396         213.33
+       1.104 0.996093750000      22414         256.00
+       1.163 0.996484375000      22422         284.44
+       1.225 0.996875000000      22431         320.00
+       1.282 0.997265625000      22440         365.71
+       1.374 0.997656250000      22449         426.67
+       1.709 0.998046875000      22458         512.00
+       1.819 0.998242187500      22462         568.89
+       1.879 0.998437500000      22466         640.00
+       2.115 0.998632812500      22471         731.43
+       2.201 0.998828125000      22475         853.33
+       2.593 0.999023437500      22480        1024.00
+       2.763 0.999121093750      22482        1137.78
+       2.835 0.999218750000      22484        1280.00
+       2.901 0.999316406250      22486        1462.86
+       2.951 0.999414062500      22488        1706.67
+       3.159 0.999511718750      22491        2048.00
+       3.219 0.999560546875      22492        2275.56
+       3.277 0.999609375000      22493        2560.00
+       3.283 0.999658203125      22494        2925.71
+       3.305 0.999707031250      22495        3413.33
+       3.309 0.999755859375      22496        4096.00
+       3.357 0.999780273438      22497        4551.11
+       3.357 0.999804687500      22497        5120.00
+       3.399 0.999829101563      22498        5851.43
+       3.399 0.999853515625      22498        6826.67
+       3.499 0.999877929688      22499        8192.00
+       3.499 0.999890136719      22499        9102.22
+       3.499 0.999902343750      22499       10240.00
+       3.613 0.999914550781      22500       11702.86
+       3.613 0.999926757813      22500       13653.33
+       3.613 0.999938964844      22500       16384.00
+       3.613 0.999945068359      22500       18204.44
+       3.613 0.999951171875      22500       20480.00
+       8.591 0.999957275391      22501       23405.71
+       8.591 1.000000000000      22501
+#[Mean    =        0.368, StdDeviation   =        0.210]
+#[Max     =        8.591, Total count    =        22501]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_5" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.093 0.000000000000          1           1.00
+       0.147 0.100000000000       2258           1.11
+       0.165 0.200000000000       4524           1.25
+       0.188 0.300000000000       6771           1.43
+       0.255 0.400000000000       9003           1.67
+       0.424 0.500000000000      11257           2.00
+       0.443 0.550000000000      12408           2.22
+       0.458 0.600000000000      13503           2.50
+       0.471 0.650000000000      14671           2.86
+       0.482 0.700000000000      15753           3.33
+       0.495 0.750000000000      16880           4.00
+       0.503 0.775000000000      17464           4.44
+       0.511 0.800000000000      18007           5.00
+       0.521 0.825000000000      18585           5.71
+       0.531 0.850000000000      19175           6.67
+       0.543 0.875000000000      19700           8.00
+       0.551 0.887500000000      19977           8.89
+       0.560 0.900000000000      20259          10.00
+       0.570 0.912500000000      20534          11.43
+       0.581 0.925000000000      20816          13.33
+       0.592 0.937500000000      21099          16.00
+       0.599 0.943750000000      21254          17.78
+       0.606 0.950000000000      21385          20.00
+       0.613 0.956250000000      21515          22.86
+       0.625 0.962500000000      21666          26.67
+       0.634 0.968750000000      21797          32.00
+       0.641 0.971875000000      21867          35.56
+       0.650 0.975000000000      21942          40.00
+       0.660 0.978125000000      22012          45.71
+       0.672 0.981250000000      22081          53.33
+       0.693 0.984375000000      22148          64.00
+       0.705 0.985937500000      22185          71.11
+       0.720 0.987500000000      22220          80.00
+       0.736 0.989062500000      22253          91.43
+       0.760 0.990625000000      22289         106.67
+       0.801 0.992187500000      22325         128.00
+       0.822 0.992968750000      22342         142.22
+       0.856 0.993750000000      22359         160.00
+       0.911 0.994531250000      22376         182.86
+       0.979 0.995312500000      22394         213.33
+       1.086 0.996093750000      22412         256.00
+       1.096 0.996484375000      22423         284.44
+       1.164 0.996875000000      22429         320.00
+       1.217 0.997265625000      22438         365.71
+       1.305 0.997656250000      22447         426.67
+       1.537 0.998046875000      22456         512.00
+       1.870 0.998242187500      22460         568.89
+       2.063 0.998437500000      22464         640.00
+       2.261 0.998632812500      22469         731.43
+       2.289 0.998828125000      22473         853.33
+       2.493 0.999023437500      22478        1024.00
+       2.507 0.999121093750      22480        1137.78
+       2.597 0.999218750000      22482        1280.00
+       2.617 0.999316406250      22484        1462.86
+       2.677 0.999414062500      22486        1706.67
+       2.783 0.999511718750      22489        2048.00
+       2.899 0.999560546875      22490        2275.56
+       3.067 0.999609375000      22491        2560.00
+       3.073 0.999658203125      22492        2925.71
+       3.213 0.999707031250      22493        3413.33
+       3.283 0.999755859375      22494        4096.00
+       3.391 0.999780273438      22495        4551.11
+       3.391 0.999804687500      22495        5120.00
+       4.867 0.999829101563      22496        5851.43
+       4.867 0.999853515625      22496        6826.67
+       5.151 0.999877929688      22497        8192.00
+       5.151 0.999890136719      22497        9102.22
+       5.151 0.999902343750      22497       10240.00
+      12.183 0.999914550781      22498       11702.86
+      12.183 0.999926757813      22498       13653.33
+      12.183 0.999938964844      22498       16384.00
+      12.183 0.999945068359      22498       18204.44
+      12.183 0.999951171875      22498       20480.00
+      28.335 0.999957275391      22499       23405.71
+      28.335 1.000000000000      22499
+#[Mean    =        0.367, StdDeviation   =        0.285]
+#[Max     =       28.335, Total count    =        22499]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+<div id="data_0" class="histo">
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+       0.092 0.000000000000          1           1.00
+       0.147 0.100000000000      11355           1.11
+       0.165 0.200000000000      22822           1.25
+       0.189 0.300000000000      33997           1.43
+       0.257 0.400000000000      45039           1.67
+       0.423 0.500000000000      56422           2.00
+       0.442 0.550000000000      62174           2.22
+       0.457 0.600000000000      67721           2.50
+       0.470 0.650000000000      73256           2.86
+       0.482 0.700000000000      78854           3.33
+       0.495 0.750000000000      84562           4.00
+       0.502 0.775000000000      87350           4.44
+       0.510 0.800000000000      90107           5.00
+       0.519 0.825000000000      92868           5.71
+       0.529 0.850000000000      95768           6.67
+       0.542 0.875000000000      98506           8.00
+       0.551 0.887500000000      99971           8.89
+       0.560 0.900000000000     101307          10.00
+       0.571 0.912500000000     102754          11.43
+       0.581 0.925000000000     104065          13.33
+       0.593 0.937500000000     105533          16.00
+       0.599 0.943750000000     106204          17.78
+       0.607 0.950000000000     106909          20.00
+       0.615 0.956250000000     107589          22.86
+       0.626 0.962500000000     108334          26.67
+       0.636 0.968750000000     108993          32.00
+       0.643 0.971875000000     109340          35.56
+       0.652 0.975000000000     109704          40.00
+       0.661 0.978125000000     110047          45.71
+       0.674 0.981250000000     110406          53.33
+       0.692 0.984375000000     110752          64.00
+       0.704 0.985937500000     110931          71.11
+       0.718 0.987500000000     111106          80.00
+       0.740 0.989062500000     111280          91.43
+       0.764 0.990625000000     111449         106.67
+       0.799 0.992187500000     111623         128.00
+       0.821 0.992968750000     111710         142.22
+       0.854 0.993750000000     111798         160.00
+       0.909 0.994531250000     111886         182.86
+       0.997 0.995312500000     111974         213.33
+       1.093 0.996093750000     112063         256.00
+       1.126 0.996484375000     112106         284.44
+       1.197 0.996875000000     112150         320.00
+       1.247 0.997265625000     112194         365.71
+       1.360 0.997656250000     112238         426.67
+       1.664 0.998046875000     112282         512.00
+       1.790 0.998242187500     112305         568.89
+       1.935 0.998437500000     112326         640.00
+       2.147 0.998632812500     112348         731.43
+       2.267 0.998828125000     112370         853.33
+       2.457 0.999023437500     112392        1024.00
+       2.529 0.999121093750     112404        1137.78
+       2.597 0.999218750000     112414        1280.00
+       2.743 0.999316406250     112425        1462.86
+       2.891 0.999414062500     112437        1706.67
+       2.951 0.999511718750     112447        2048.00
+       3.047 0.999560546875     112452        2275.56
+       3.103 0.999609375000     112458        2560.00
+       3.185 0.999658203125     112463        2925.71
+       3.271 0.999707031250     112469        3413.33
+       3.289 0.999755859375     112474        4096.00
+       3.305 0.999780273438     112477        4551.11
+       3.357 0.999804687500     112480        5120.00
+       3.391 0.999829101563     112482        5851.43
+       3.499 0.999853515625     112485        6826.67
+       3.627 0.999877929688     112488        8192.00
+       4.867 0.999890136719     112489        9102.22
+       6.755 0.999902343750     112491       10240.00
+       7.219 0.999914550781     112492       11702.86
+       7.735 0.999926757813     112493       13653.33
+       8.591 0.999938964844     112495       16384.00
+       8.591 0.999945068359     112495       18204.44
+       8.823 0.999951171875     112496       20480.00
+      12.183 0.999957275391     112497       23405.71
+      12.183 0.999963378906     112497       27306.67
+      13.447 0.999969482422     112498       32768.00
+      13.447 0.999972534180     112498       36408.89
+      28.335 0.999975585938     112499       40960.00
+      28.335 0.999978637695     112499       46811.43
+      28.335 0.999981689453     112499       54613.33
+      31.055 0.999984741211     112500       65536.00
+      31.055 0.999986267090     112500       72817.78
+      31.055 0.999987792969     112500       81920.00
+      31.055 0.999989318848     112500       93622.86
+      31.055 0.999990844727     112500      109226.67
+      38.047 0.999992370605     112501      131072.00
+      38.047 1.000000000000     112501
+#[Mean    =        0.366, StdDeviation   =        0.271]
+#[Max     =       38.047, Total count    =       112501]
+#[Buckets =           22, SubBuckets     =         2048]
+</div>
+
+<style>
+table, th, td {
+  border:1px solid black; font-size:16px; text-align: center;
+}
+mark {
+  background-color: LightGray;
+  color: black;
+}
+</style>
+
+<h2>Percentile Response Time Distribution (HDR)</h2>
+<table style="width:800px">
+  <tr>
+    <th>Value</th>
+    <th>Percentile</th>
+    <th>TotalCount</th>
+    <th>1/(1-Percentile)</th>
+    <th>AboveCount</th>
+  </tr>
+  <tr>
+    <td>38.047 ms</td>
+    <td>1.000000000000</td>
+    <td>112501</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>38.047 ms</td>
+    <td>0.999992370605</td>
+    <td>112501</td>
+    <td>131072.00</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>31.055 ms</td>
+    <td>0.999990844727</td>
+    <td>112500</td>
+    <td>109226.67</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>31.055 ms</td>
+    <td>0.999989318848</td>
+    <td>112500</td>
+    <td>93622.86</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>31.055 ms</td>
+    <td>0.999987792969</td>
+    <td>112500</td>
+    <td>81920.00</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>31.055 ms</td>
+    <td>0.999986267090</td>
+    <td>112500</td>
+    <td>72817.78</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>31.055 ms</td>
+    <td>0.999984741211</td>
+    <td>112500</td>
+    <td>65536.00</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>28.335 ms</td>
+    <td>0.999981689453</td>
+    <td>112499</td>
+    <td>54613.33</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>28.335 ms</td>
+    <td>0.999978637695</td>
+    <td>112499</td>
+    <td>46811.43</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>28.335 ms</td>
+    <td>0.999975585938</td>
+    <td>112499</td>
+    <td>40960.00</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>13.447 ms</td>
+    <td>0.999972534180</td>
+    <td>112498</td>
+    <td>36408.89</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>13.447 ms</td>
+    <td>0.999969482422</td>
+    <td>112498</td>
+    <td>32768.00</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>12.183 ms</td>
+    <td>0.999963378906</td>
+    <td>112497</td>
+    <td>27306.67</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>12.183 ms</td>
+    <td>0.999957275391</td>
+    <td>112497</td>
+    <td>23405.71</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>8.823 ms</td>
+    <td>0.999951171875</td>
+    <td>112496</td>
+    <td>20480.00</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>8.591 ms</td>
+    <td>0.999945068359</td>
+    <td>112495</td>
+    <td>18204.44</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>8.591 ms</td>
+    <td>0.999938964844</td>
+    <td>112495</td>
+    <td>16384.00</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>7.735 ms</td>
+    <td>0.999926757813</td>
+    <td>112493</td>
+    <td>13653.33</td>
+    <td>8</td>
+  </tr>
+  <tr>
+    <td>7.219 ms</td>
+    <td>0.999914550781</td>
+    <td>112492</td>
+    <td>11702.86</td>
+    <td>9</td>
+  </tr>
+  <tr>
+    <td>6.755 ms</td>
+    <td>0.999902343750</td>
+    <td>112491</td>
+    <td>10240.00</td>
+    <td>10</td>
+  </tr>
+  <tr>
+    <td>4.867 ms</td>
+    <td>0.999890136719</td>
+    <td>112489</td>
+    <td>9102.22</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td>3.627 ms</td>
+    <td>0.999877929688</td>
+    <td>112488</td>
+    <td>8192.00</td>
+    <td>13</td>
+  </tr>
+  <tr>
+    <td>3.499 ms</td>
+    <td>0.999853515625</td>
+    <td>112485</td>
+    <td>6826.67</td>
+    <td>16</td>
+  </tr>
+  <tr>
+    <td>3.391 ms</td>
+    <td>0.999829101563</td>
+    <td>112482</td>
+    <td>5851.43</td>
+    <td>19</td>
+  </tr>
+  <tr>
+    <td>3.357 ms</td>
+    <td>0.999804687500</td>
+    <td>112480</td>
+    <td>5120.00</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>3.305 ms</td>
+    <td>0.999780273438</td>
+    <td>112477</td>
+    <td>4551.11</td>
+    <td>24</td>
+  </tr>
+  <tr>
+    <td>3.289 ms</td>
+    <td>0.999755859375</td>
+    <td>112474</td>
+    <td>4096.00</td>
+    <td>27</td>
+  </tr>
+  <tr>
+    <td>3.271 ms</td>
+    <td>0.999707031250</td>
+    <td>112469</td>
+    <td>3413.33</td>
+    <td>32</td>
+  </tr>
+  <tr>
+    <td>3.185 ms</td>
+    <td>0.999658203125</td>
+    <td>112463</td>
+    <td>2925.71</td>
+    <td>38</td>
+  </tr>
+  <tr>
+    <td>3.103 ms</td>
+    <td>0.999609375000</td>
+    <td>112458</td>
+    <td>2560.00</td>
+    <td>43</td>
+  </tr>
+  <tr>
+    <td>3.047 ms</td>
+    <td>0.999560546875</td>
+    <td>112452</td>
+    <td>2275.56</td>
+    <td>49</td>
+  </tr>
+  <tr>
+    <td>2.951 ms</td>
+    <td>0.999511718750</td>
+    <td>112447</td>
+    <td>2048.00</td>
+    <td>54</td>
+  </tr>
+  <tr>
+    <td>2.891 ms</td>
+    <td>0.999414062500</td>
+    <td>112437</td>
+    <td>1706.67</td>
+    <td>64</td>
+  </tr>
+  <tr>
+    <td>2.743 ms</td>
+    <td>0.999316406250</td>
+    <td>112425</td>
+    <td>1462.86</td>
+    <td>76</td>
+  </tr>
+  <tr>
+    <td>2.597 ms</td>
+    <td>0.999218750000</td>
+    <td>112414</td>
+    <td>1280.00</td>
+    <td>87</td>
+  </tr>
+  <tr>
+    <td>2.529 ms</td>
+    <td>0.999121093750</td>
+    <td>112404</td>
+    <td>1137.78</td>
+    <td>97</td>
+  </tr>
+  <tr>
+    <td><mark>2.457 ms</mark></td>
+    <td><mark>0.999023437500</mark></td>
+    <td>112392</td>
+    <td>1024.00</td>
+    <td>109</td>
+  </tr>
+  <tr>
+    <td>2.267 ms</td>
+    <td>0.998828125000</td>
+    <td>112370</td>
+    <td>853.33</td>
+    <td>131</td>
+  </tr>
+  <tr>
+    <td>2.147 ms</td>
+    <td>0.998632812500</td>
+    <td>112348</td>
+    <td>731.43</td>
+    <td>153</td>
+  </tr>
+  <tr>
+    <td>1.935 ms</td>
+    <td>0.998437500000</td>
+    <td>112326</td>
+    <td>640.00</td>
+    <td>175</td>
+  </tr>
+  <tr>
+    <td>1.790 ms</td>
+    <td>0.998242187500</td>
+    <td>112305</td>
+    <td>568.89</td>
+    <td>196</td>
+  </tr>
+  <tr>
+    <td>1.664 ms</td>
+    <td>0.998046875000</td>
+    <td>112282</td>
+    <td>512.00</td>
+    <td>219</td>
+  </tr>
+  <tr>
+    <td>1.360 ms</td>
+    <td>0.997656250000</td>
+    <td>112238</td>
+    <td>426.67</td>
+    <td>263</td>
+  </tr>
+  <tr>
+    <td>1.247 ms</td>
+    <td>0.997265625000</td>
+    <td>112194</td>
+    <td>365.71</td>
+    <td>307</td>
+  </tr>
+  <tr>
+    <td>1.197 ms</td>
+    <td>0.996875000000</td>
+    <td>112150</td>
+    <td>320.00</td>
+    <td>351</td>
+  </tr>
+  <tr>
+    <td>1.126 ms</td>
+    <td>0.996484375000</td>
+    <td>112106</td>
+    <td>284.44</td>
+    <td>395</td>
+  </tr>
+  <tr>
+    <td>1.093 ms</td>
+    <td>0.996093750000</td>
+    <td>112063</td>
+    <td>256.00</td>
+    <td>438</td>
+  </tr>
+  <tr>
+    <td>0.997 ms</td>
+    <td>0.995312500000</td>
+    <td>111974</td>
+    <td>213.33</td>
+    <td>527</td>
+  </tr>
+  <tr>
+    <td>0.909 ms</td>
+    <td>0.994531250000</td>
+    <td>111886</td>
+    <td>182.86</td>
+    <td>615</td>
+  </tr>
+  <tr>
+    <td>0.854 ms</td>
+    <td>0.993750000000</td>
+    <td>111798</td>
+    <td>160.00</td>
+    <td>703</td>
+  </tr>
+  <tr>
+    <td>0.821 ms</td>
+    <td>0.992968750000</td>
+    <td>111710</td>
+    <td>142.22</td>
+    <td>791</td>
+  </tr>
+  <tr>
+    <td>0.799 ms</td>
+    <td>0.992187500000</td>
+    <td>111623</td>
+    <td>128.00</td>
+    <td>878</td>
+  </tr>
+  <tr>
+    <td><mark>0.764 ms</mark></td>
+    <td><mark>0.990625000000</mark></td>
+    <td>111449</td>
+    <td>106.67</td>
+    <td>1052</td>
+  </tr>
+  <tr>
+    <td>0.740 ms</td>
+    <td>0.989062500000</td>
+    <td>111280</td>
+    <td>91.43</td>
+    <td>1221</td>
+  </tr>
+  <tr>
+    <td>0.718 ms</td>
+    <td>0.987500000000</td>
+    <td>111106</td>
+    <td>80.00</td>
+    <td>1395</td>
+  </tr>
+  <tr>
+    <td>0.704 ms</td>
+    <td>0.985937500000</td>
+    <td>110931</td>
+    <td>71.11</td>
+    <td>1570</td>
+  </tr>
+  <tr>
+    <td>0.692 ms</td>
+    <td>0.984375000000</td>
+    <td>110752</td>
+    <td>64.00</td>
+    <td>1749</td>
+  </tr>
+  <tr>
+    <td>0.674 ms</td>
+    <td>0.981250000000</td>
+    <td>110406</td>
+    <td>53.33</td>
+    <td>2095</td>
+  </tr>
+  <tr>
+    <td>0.661 ms</td>
+    <td>0.978125000000</td>
+    <td>110047</td>
+    <td>45.71</td>
+    <td>2454</td>
+  </tr>
+  <tr>
+    <td>0.652 ms</td>
+    <td>0.975000000000</td>
+    <td>109704</td>
+    <td>40.00</td>
+    <td>2797</td>
+  </tr>
+  <tr>
+    <td>0.643 ms</td>
+    <td>0.971875000000</td>
+    <td>109340</td>
+    <td>35.56</td>
+    <td>3161</td>
+  </tr>
+  <tr>
+    <td>0.636 ms</td>
+    <td>0.968750000000</td>
+    <td>108993</td>
+    <td>32.00</td>
+    <td>3508</td>
+  </tr>
+  <tr>
+    <td>0.626 ms</td>
+    <td>0.962500000000</td>
+    <td>108334</td>
+    <td>26.67</td>
+    <td>4167</td>
+  </tr>
+  <tr>
+    <td>0.615 ms</td>
+    <td>0.956250000000</td>
+    <td>107589</td>
+    <td>22.86</td>
+    <td>4912</td>
+  </tr>
+  <tr>
+    <td><mark>0.607 ms</mark></td>
+    <td><mark>0.950000000000</mark></td>
+    <td>106909</td>
+    <td>20.00</td>
+    <td>5592</td>
+  </tr>
+  <tr>
+    <td>0.599 ms</td>
+    <td>0.943750000000</td>
+    <td>106204</td>
+    <td>17.78</td>
+    <td>6297</td>
+  </tr>
+  <tr>
+    <td>0.593 ms</td>
+    <td>0.937500000000</td>
+    <td>105533</td>
+    <td>16.00</td>
+    <td>6968</td>
+  </tr>
+  <tr>
+    <td>0.581 ms</td>
+    <td>0.925000000000</td>
+    <td>104065</td>
+    <td>13.33</td>
+    <td>8436</td>
+  </tr>
+  <tr>
+    <td>0.571 ms</td>
+    <td>0.912500000000</td>
+    <td>102754</td>
+    <td>11.43</td>
+    <td>9747</td>
+  </tr>
+  <tr>
+    <td><mark>0.560 ms</mark></td>
+    <td><mark>0.900000000000</mark></td>
+    <td>101307</td>
+    <td>10.00</td>
+    <td>11194</td>
+  </tr>
+  <tr>
+    <td>0.551 ms</td>
+    <td>0.887500000000</td>
+    <td>99971</td>
+    <td>8.89</td>
+    <td>12530</td>
+  </tr>
+  <tr>
+    <td>0.542 ms</td>
+    <td>0.875000000000</td>
+    <td>98506</td>
+    <td>8.00</td>
+    <td>13995</td>
+  </tr>
+  <tr>
+    <td>0.529 ms</td>
+    <td>0.850000000000</td>
+    <td>95768</td>
+    <td>6.67</td>
+    <td>16733</td>
+  </tr>
+  <tr>
+    <td>0.519 ms</td>
+    <td>0.825000000000</td>
+    <td>92868</td>
+    <td>5.71</td>
+    <td>19633</td>
+  </tr>
+  <tr>
+    <td><mark>0.510 ms</mark></td>
+    <td><mark>0.800000000000</mark></td>
+    <td>90107</td>
+    <td>5.00</td>
+    <td>22394</td>
+  </tr>
+  <tr>
+    <td>0.502 ms</td>
+    <td>0.775000000000</td>
+    <td>87350</td>
+    <td>4.44</td>
+    <td>25151</td>
+  </tr>
+  <tr>
+    <td>0.495 ms</td>
+    <td>0.750000000000</td>
+    <td>84562</td>
+    <td>4.00</td>
+    <td>27939</td>
+  </tr>
+  <tr>
+    <td>0.482 ms</td>
+    <td>0.700000000000</td>
+    <td>78854</td>
+    <td>3.33</td>
+    <td>33647</td>
+  </tr>
+  <tr>
+    <td>0.470 ms</td>
+    <td>0.650000000000</td>
+    <td>73256</td>
+    <td>2.86</td>
+    <td>39245</td>
+  </tr>
+  <tr>
+    <td>0.457 ms</td>
+    <td>0.600000000000</td>
+    <td>67721</td>
+    <td>2.50</td>
+    <td>44780</td>
+  </tr>
+  <tr>
+    <td>0.442 ms</td>
+    <td>0.550000000000</td>
+    <td>62174</td>
+    <td>2.22</td>
+    <td>50327</td>
+  </tr>
+  <tr>
+    <td><mark>0.423 ms</mark></td>
+    <td><mark>0.500000000000</mark></td>
+    <td>56422</td>
+    <td>2.00</td>
+    <td>56079</td>
+  </tr>
+  <tr>
+    <td>0.257 ms</td>
+    <td>0.400000000000</td>
+    <td>45039</td>
+    <td>1.67</td>
+    <td>67462</td>
+  </tr>
+  <tr>
+    <td>0.189 ms</td>
+    <td>0.300000000000</td>
+    <td>33997</td>
+    <td>1.43</td>
+    <td>78504</td>
+  </tr>
+  <tr>
+    <td>0.165 ms</td>
+    <td>0.200000000000</td>
+    <td>22822</td>
+    <td>1.25</td>
+    <td>89679</td>
+  </tr>
+  <tr>
+    <td>0.147 ms</td>
+    <td>0.100000000000</td>
+    <td>11355</td>
+    <td>1.11</td>
+    <td>101146</td>
+  </tr>
+  <tr>
+    <td>0.092 ms</td>
+    <td>0.000000000000</td>
+    <td>1</td>
+    <td>1.00</td>
+    <td>112500</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg: 0.366 ms</td>
+    <td>sd: 0.271 ms</td>
+    <td>p90: 0.560 ms</td>
+    <td>p95: 0.607 ms</td>
+    <td>p99: 0.753 ms</td>
+  </tr>
+</table>
+
+<h2>Percentile Response Time Distribution (LLQ)</h2>
+
+<table style="width:800px">
+  <tr>
+    <th>Value</th>
+    <th>Percentile</th>
+    <th>Total Count</th>
+    <th>Bucket Size</th>
+    <th>Percentage</th>
+    <th>Above Count</th>
+  </tr>
+  <tr>
+    <td> 40.0 ms</td>
+    <td>1.000000</td>
+    <td>112501</td>
+    <td>1</td>
+    <td>0.001</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td> 30.0 ms</td>
+    <td>0.999991</td>
+    <td>112500</td>
+    <td>2</td>
+    <td>0.002</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td> 15.0 ms</td>
+    <td>0.999973</td>
+    <td>112498</td>
+    <td>1</td>
+    <td>0.001</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td> 10.0 ms</td>
+    <td>0.999964</td>
+    <td>112497</td>
+    <td>1</td>
+    <td>0.001</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td> 9.0 ms</td>
+    <td>0.999956</td>
+    <td>112496</td>
+    <td>1</td>
+    <td>0.001</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td> 8.5 ms</td>
+    <td>0.999947</td>
+    <td>112495</td>
+    <td>2</td>
+    <td>0.002</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td> 7.5 ms</td>
+    <td>0.999929</td>
+    <td>112493</td>
+    <td>1</td>
+    <td>0.001</td>
+    <td>8</td>
+  </tr>
+  <tr>
+    <td> 7.0 ms</td>
+    <td>0.999920</td>
+    <td>112492</td>
+    <td>2</td>
+    <td>0.002</td>
+    <td>9</td>
+  </tr>
+  <tr>
+    <td> 5.0 ms</td>
+    <td>0.999902</td>
+    <td>112490</td>
+    <td>2</td>
+    <td>0.002</td>
+    <td>11</td>
+  </tr>
+  <tr>
+    <td> 3.5 ms</td>
+    <td>0.999884</td>
+    <td>112488</td>
+    <td>20</td>
+    <td>0.018</td>
+    <td>13</td>
+  </tr>
+  <tr>
+    <td> 3.0 ms</td>
+    <td>0.999707</td>
+    <td>112468</td>
+    <td>43</td>
+    <td>0.038</td>
+    <td>33</td>
+  </tr>
+  <tr>
+    <td> 2.5 ms</td>
+    <td>0.999324</td>
+    <td>112425</td>
+    <td>60</td>
+    <td>0.053</td>
+    <td>76</td>
+  </tr>
+  <tr>
+    <td> 2.0 ms</td>
+    <td>0.998791</td>
+    <td>112365</td>
+    <td>73</td>
+    <td>0.065</td>
+    <td>136</td>
+  </tr>
+  <tr>
+    <td> 1.5 ms</td>
+    <td>0.998142</td>
+    <td>112292</td>
+    <td>97</td>
+    <td>0.086</td>
+    <td>209</td>
+  </tr>
+  <tr>
+    <td> 1.0 ms</td>
+    <td>0.997280</td>
+    <td>112195</td>
+    <td>245</td>
+    <td>0.218</td>
+    <td>306</td>
+  </tr>
+  <tr>
+    <td> 950.0 μs</td>
+    <td>0.995102</td>
+    <td>111950</td>
+    <td>41</td>
+    <td>0.036</td>
+    <td>551</td>
+  </tr>
+  <tr>
+    <td> 900.0 μs</td>
+    <td>0.994738</td>
+    <td>111909</td>
+    <td>74</td>
+    <td>0.066</td>
+    <td>592</td>
+  </tr>
+  <tr>
+    <td> 850.0 μs</td>
+    <td>0.994080</td>
+    <td>111835</td>
+    <td>114</td>
+    <td>0.101</td>
+    <td>666</td>
+  </tr>
+  <tr>
+    <td> 800.0 μs</td>
+    <td>0.993067</td>
+    <td>111721</td>
+    <td>212</td>
+    <td>0.188</td>
+    <td>780</td>
+  </tr>
+  <tr>
+    <td> 750.0 μs</td>
+    <td>0.991182</td>
+    <td>111509</td>
+    <td>349</td>
+    <td>0.310</td>
+    <td>992</td>
+  </tr>
+  <tr>
+    <td> 700.0 μs</td>
+    <td>0.988080</td>
+    <td>111160</td>
+    <td>754</td>
+    <td>0.670</td>
+    <td>1341</td>
+  </tr>
+  <tr>
+    <td> 650.0 μs</td>
+    <td>0.981378</td>
+    <td>110406</td>
+    <td>2213</td>
+    <td><mark>1.967</mark></td>
+    <td>2095</td>
+  </tr>
+  <tr>
+    <td> 600.0 μs</td>
+    <td>0.961707</td>
+    <td>108193</td>
+    <td>5029</td>
+    <td><mark>4.470</mark></td>
+    <td>4308</td>
+  </tr>
+  <tr>
+    <td> 550.0 μs</td>
+    <td>0.917005</td>
+    <td>103164</td>
+    <td>8779</td>
+    <td><mark>7.803</mark></td>
+    <td>9337</td>
+  </tr>
+  <tr>
+    <td> 500.0 μs</td>
+    <td>0.838970</td>
+    <td>94385</td>
+    <td>19346</td>
+    <td><mark>17.196</mark></td>
+    <td>18116</td>
+  </tr>
+  <tr>
+    <td> 450.0 μs</td>
+    <td>0.667007</td>
+    <td>75039</td>
+    <td>18337</td>
+    <td><mark>16.299</mark></td>
+    <td>37462</td>
+  </tr>
+  <tr>
+    <td> 400.0 μs</td>
+    <td>0.504013</td>
+    <td>56702</td>
+    <td>5694</td>
+    <td><mark>5.061</mark></td>
+    <td>55799</td>
+  </tr>
+  <tr>
+    <td> 350.0 μs</td>
+    <td>0.453400</td>
+    <td>51008</td>
+    <td>2025</td>
+    <td><mark>1.800</mark></td>
+    <td>61493</td>
+  </tr>
+  <tr>
+    <td> 300.0 μs</td>
+    <td>0.435401</td>
+    <td>48983</td>
+    <td>2734</td>
+    <td><mark>2.430</mark></td>
+    <td>63518</td>
+  </tr>
+  <tr>
+    <td> 250.0 μs</td>
+    <td>0.411099</td>
+    <td>46249</td>
+    <td>4631</td>
+    <td><mark>4.116</mark></td>
+    <td>66252</td>
+  </tr>
+  <tr>
+    <td> 200.0 μs</td>
+    <td>0.369934</td>
+    <td>41618</td>
+    <td>13627</td>
+    <td><mark>12.113</mark></td>
+    <td>70883</td>
+  </tr>
+  <tr>
+    <td> 150.0 μs</td>
+    <td>0.248807</td>
+    <td>27991</td>
+    <td>25793</td>
+    <td><mark>22.927</mark></td>
+    <td>84510</td>
+  </tr>
+  <tr>
+    <td> 100.0 μs</td>
+    <td>0.019538</td>
+    <td>2198</td>
+    <td>2177</td>
+    <td><mark>1.935</mark></td>
+    <td>110303</td>
+  </tr>
+  <tr>
+    <td> 95.0 μs</td>
+    <td>0.000187</td>
+    <td>21</td>
+    <td>21</td>
+    <td>0.019</td>
+    <td>112480</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg:  366.4 μs</td>
+    <td>sd:  274.7 μs</td>
+    <td>p50:  400.0 μs</td>
+    <td>p90:  550.0 μs</td>
+    <td>p95:  600.0 μs</td>
+    <td>p99:  750.0 μs</td>
+  </tr>
+
+</table>
+
