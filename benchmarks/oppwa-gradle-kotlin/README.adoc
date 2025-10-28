@@ -1,8 +1,11 @@
 = API Benchmark
 
+https://docs.oppwa.com/integrations/server-to-server
+
 == State Diagram
 
-image::Screenshot_20241113_080450.png[]
+.Tulip Benchmark State Diagram
+image::images/image-2025-10-28-08-35-31-336.png[]
 
 == Appendix
 
