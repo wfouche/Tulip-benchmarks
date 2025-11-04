@@ -50,7 +50,7 @@
         },
         "Constant TPS": {
             "enabled": true,
-            "aps_rate": 30.0,
+            "aps_rate": 100.0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 30,
@@ -61,7 +61,7 @@
         },
         "Rising TPS": {
             "enabled": true,
-            "aps_rate": 10.0,
+            "aps_rate": 90.0,
             "aps_rate_step_change": 10.0,
             "aps_rate_step_count": 3,
             "time": {
@@ -81,8 +81,8 @@
     "contexts": {
         "Context-1": {
             "enabled": true,
-            "num_users": 100,
-            "num_threads": 100
+            "num_users": 150,
+            "num_threads": 150
         },
         "Context-2": {
             "enabled": false,

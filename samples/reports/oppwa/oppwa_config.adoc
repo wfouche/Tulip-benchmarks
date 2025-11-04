@@ -122,8 +122,8 @@ A4 --> A0: 1.00
 |===
 | id | value 
 | *enabled* | True
-| *num_users*   | 100
-| *num_threads* | 100
+| *num_users*   | 150
+| *num_threads* | 150
 |===
 === Context-2
 
@@ -161,7 +161,7 @@ A4 --> A0: 1.00
 |===
 | id | value
 | *enabled* | True
-| *aps_rate* | 30.0
+| *aps_rate* | 100.0
 | *worker_thread_queue_size* | 0
 | *scenario_workflow* | <<Payments>>
 | *time* 
@@ -185,7 +185,7 @@ A4 --> A0: 1.00
 |===
 | id | value
 | *enabled* | True
-| *aps_rate* | 10.0
+| *aps_rate* | 90.0
 | *aps_rate_step_change* | 10.0
 | *aps_rate_step_count* | 3
 | *worker_thread_queue_size* | 0
@@ -283,7 +283,7 @@ A4 --> A0: 1.00
         }, 
         "Constant TPS": {
             "enabled": true, 
-            "aps_rate": 30.0, 
+            "aps_rate": 100.0, 
             "time": {
                 "pre_warmup_duration": 15, 
                 "warmup_duration": 30, 
@@ -294,7 +294,7 @@ A4 --> A0: 1.00
         }, 
         "Rising TPS": {
             "enabled": true, 
-            "aps_rate": 10.0, 
+            "aps_rate": 90.0, 
             "aps_rate_step_change": 10.0, 
             "aps_rate_step_count": 3, 
             "time": {
@@ -318,8 +318,8 @@ A4 --> A0: 1.00
     "contexts": {
         "Context-1": {
             "enabled": true, 
-            "num_users": 100, 
-            "num_threads": 100
+            "num_users": 150, 
+            "num_threads": 150
         }, 
         "Context-2": {
             "enabled": false, 
