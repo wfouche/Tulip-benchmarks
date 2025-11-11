@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClientException
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.web.client.body
 
 /*-------------------------------------------------------------------------*/
 
@@ -115,15 +116,14 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             "card.cvv" to "123"
         )
         val reqBodyText: String = map.entries.joinToString("&")
-        val rspBodyText: String? = restClient().post()
+        val rsp: AuthResponse? = restClient().post()
             .uri("/v1/payments")
             .header("Authorization", "Bearer " + token)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(reqBodyText)
             .retrieve()
-            .body(String::class.java)
-        if (rspBodyText != null) {
-            val rsp = Json.decodeFromString<AuthResponse>(rspBodyText!!)
+            .body<AuthResponse>()
+        if (rsp != null) {
             if (rsp.result.code.split(".")[0] == "000") {
                 paymentId = rsp.id
                 return true
@@ -146,15 +146,14 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             "paymentType" to "CP"
         )
         val reqBodyText: String = map.entries.joinToString("&")
-        val rspBodyText: String? = restClient().post()
+        val rsp: CompResponse? = restClient().post()
             .uri("/v1/payments/${paymentId}")
             .header("Authorization", "Bearer " + token)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(reqBodyText)
             .retrieve()
-            .body(String::class.java)
-        if (rspBodyText != null) {
-            val rsp = Json.decodeFromString<CompResponse>(rspBodyText!!)
+            .body<CompResponse>()
+        if (rsp != null) {
             if (rsp.result.code.split(".")[0] == "000") {
                 return true
             }
@@ -180,15 +179,14 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             "card.cvv" to "123"
         )
         val reqBodyText: String = map.entries.joinToString("&")
-        val rspBodyText: String? = restClient().post()
+        val rsp: AuthResponse? = restClient().post()
             .uri("/v1/payments")
             .header("Authorization", "Bearer " + token)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(reqBodyText)
             .retrieve()
-            .body(String::class.java)
-        if (rspBodyText != null) {
-            val rsp = Json.decodeFromString<AuthResponse>(rspBodyText!!)
+            .body<AuthResponse>()
+        if (rsp != null) {
             if (rsp.result.code.split(".")[0] == "000") {
                 paymentId = rsp.id
                 return true
@@ -211,15 +209,14 @@ class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
             "paymentType" to "RF"
         )
         val reqBodyText: String = map.entries.joinToString("&")
-        val rspBodyText: String? = restClient().post()
+        val rsp: CompResponse? = restClient().post()
             .uri("/v1/payments/${paymentId}")
             .header("Authorization", "Bearer " + token)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(reqBodyText)
             .retrieve()
-            .body(String::class.java)
-        if (rspBodyText != null) {
-            val rsp = Json.decodeFromString<CompResponse>(rspBodyText!!)
+            .body<CompResponse>()
+        if (rsp != null) {
             if (rsp.result.code.split(".")[0] == "000") {
                 return true
             }
