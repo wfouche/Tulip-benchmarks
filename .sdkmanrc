@@ -3,6 +3,7 @@
 
 # Java
 java=21.0.8-tem
+#ava=25.0.1-amzn
 
 # Groovy
 groovy=5.0.1
@@ -11,16 +12,16 @@ groovy=5.0.1
 gradle=9.1.0
 
 # JBang
-jbang=0.131.0
+jbang=0.132.1
 
 # Kotlin
-kotlin=2.1.21
+kotlin=2.2.21
 
 # Scala
 scalacli=1.9.1
 
 # MCS
-mcs=0.9.0
+mcs=0.9.1
 
 # Maven
 maven=3.9.11
