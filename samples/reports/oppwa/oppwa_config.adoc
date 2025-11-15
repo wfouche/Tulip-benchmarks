@@ -11,22 +11,6 @@
 // :diagram-server-url: https://kroki.io/
 // :diagram-server-type: kroki_io
 
-++++
-<style>
-/* CSS block for styling the main content area */
-#content {
-    max-width: 1140px; /* Set your desired maximum width */
-    margin: 0 auto;  /* Center the content */
-    padding: 0 1em; /* Add some horizontal padding */
-}
-/* You can also target other elements like header or footer */
-#header, #footer {
-    max-width: 1140px; /* Apply the same max-width to header and footer */
-    margin: 0 auto;
-}
-</style>
-++++
-
 Filename::
   src/main/resources/oppwa_config.json
 
@@ -52,7 +36,10 @@ Filename::
 ! id ! value 
 ! *url* ! https://eu-test.oppwa.com
 ! *httpVersion* ! HTTP_1_1
-! *token* ! OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=
+! *connectTimeoutMillis* ! 2000
+! *readTimeoutMillis* ! 5000
+! *entityId* ! 8ac7a4c79394bdc801939736f17e063d
+! *token* ! OGFjN2E0Yzc5Mzk0YmRjODAxOTM5NzM2ZjFhNzA2NDF8enlac1lYckc4QXk6bjYzI1NHNng=
 ! *apiDocs* ! https://docs.oppwa.com/integrations/server-to-server
 !===
 | *user_actions*
@@ -135,8 +122,8 @@ A4 --> A0: 1.00
 |===
 | id | value 
 | *enabled* | True
-| *num_users*   | 100
-| *num_threads* | 100
+| *num_users*   | 150
+| *num_threads* | 150
 |===
 === Context-2
 
@@ -184,7 +171,7 @@ A4 --> A0: 1.00
 ! *pre_warmup_duration*
 ! 15 seconds
 ! *warmup_duration*
-! 15 seconds
+! 30 seconds
 ! *benchmark_duration*
 ! 30 seconds
 ! *benchmark_iterations*
@@ -198,8 +185,8 @@ A4 --> A0: 1.00
 |===
 | id | value
 | *enabled* | True
-| *aps_rate* | 30.0
-| *aps_rate_step_change* | 40.0
+| *aps_rate* | 90.0
+| *aps_rate_step_change* | 10.0
 | *aps_rate_step_count* | 3
 | *worker_thread_queue_size* | 0
 | *scenario_workflow* | <<Payments>>
@@ -210,7 +197,7 @@ A4 --> A0: 1.00
 ! *pre_warmup_duration*
 ! 15 seconds
 ! *warmup_duration*
-! 15 seconds
+! 30 seconds
 ! *benchmark_duration*
 ! 30 seconds
 ! *benchmark_iterations*
@@ -249,7 +236,10 @@ A4 --> A0: 1.00
         "user_params": {
             "url": "https://eu-test.oppwa.com", 
             "httpVersion": "HTTP_1_1", 
-            "token": "OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8ZmY0b1UhZSVlckI9YUJzQj82KyU=", 
+            "connectTimeoutMillis": 2000, 
+            "readTimeoutMillis": 5000, 
+            "entityId": "8ac7a4c79394bdc801939736f17e063d", 
+            "token": "OGFjN2E0Yzc5Mzk0YmRjODAxOTM5NzM2ZjFhNzA2NDF8enlac1lYckc4QXk6bjYzI1NHNng=", 
             "apiDocs": "https://docs.oppwa.com/integrations/server-to-server"
         }, 
         "user_actions": {
@@ -296,7 +286,7 @@ A4 --> A0: 1.00
             "aps_rate": 100.0, 
             "time": {
                 "pre_warmup_duration": 15, 
-                "warmup_duration": 15, 
+                "warmup_duration": 30, 
                 "benchmark_duration": 30, 
                 "benchmark_iterations": 9
             }, 
@@ -304,12 +294,12 @@ A4 --> A0: 1.00
         }, 
         "Rising TPS": {
             "enabled": true, 
-            "aps_rate": 30.0, 
-            "aps_rate_step_change": 40.0, 
+            "aps_rate": 90.0, 
+            "aps_rate_step_change": 10.0, 
             "aps_rate_step_count": 3, 
             "time": {
                 "pre_warmup_duration": 15, 
-                "warmup_duration": 15, 
+                "warmup_duration": 30, 
                 "benchmark_duration": 30, 
                 "benchmark_iterations": 3
             }, 
@@ -328,8 +318,8 @@ A4 --> A0: 1.00
     "contexts": {
         "Context-1": {
             "enabled": true, 
-            "num_users": 100, 
-            "num_threads": 100
+            "num_users": 150, 
+            "num_threads": 150
         }, 
         "Context-2": {
             "enabled": false, 

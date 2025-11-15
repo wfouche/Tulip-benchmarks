@@ -12,8 +12,172 @@ mark {
 <a href="../oppwa_report.html">Up</a>
 <a href="oppwa_report_2_0.html">Prev</a>
 <a href="oppwa_report_2_2.html">Next</a>
-<h2>[2.CP] Percentile Response Time Distribution</h2>
-<table style="width:600px">
+<h2>[2.CP] Percentile Response Time Distribution (LLQ)</h2>
+<table style="width:800px">
+  <tr>
+    <th>Value</th>
+    <th>Percentile</th>
+    <th>Total Count</th>
+    <th>Bucket Size</th>
+    <th>Percentage</th>
+    <th>Above Count</th>
+  </tr>
+  <tr>
+    <td> 1.5 s</td>
+    <td>1.000000</td>
+    <td>7920</td>
+    <td>3</td>
+    <td>0.038</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td> 1.0 s</td>
+    <td>0.999621</td>
+    <td>7917</td>
+    <td>8</td>
+    <td>0.101</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td> 950.0 ms</td>
+    <td>0.998611</td>
+    <td>7909</td>
+    <td>1</td>
+    <td>0.013</td>
+    <td>11</td>
+  </tr>
+  <tr>
+    <td> 900.0 ms</td>
+    <td>0.998485</td>
+    <td>7908</td>
+    <td>4</td>
+    <td>0.051</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td> 850.0 ms</td>
+    <td>0.997980</td>
+    <td>7904</td>
+    <td>7</td>
+    <td>0.088</td>
+    <td>16</td>
+  </tr>
+  <tr>
+    <td> 800.0 ms</td>
+    <td>0.997096</td>
+    <td>7897</td>
+    <td>3</td>
+    <td>0.038</td>
+    <td>23</td>
+  </tr>
+  <tr>
+    <td> 750.0 ms</td>
+    <td>0.996717</td>
+    <td>7894</td>
+    <td>9</td>
+    <td>0.114</td>
+    <td>26</td>
+  </tr>
+  <tr>
+    <td> 700.0 ms</td>
+    <td>0.995581</td>
+    <td>7885</td>
+    <td>28</td>
+    <td>0.354</td>
+    <td>35</td>
+  </tr>
+  <tr>
+    <td> 650.0 ms</td>
+    <td>0.992045</td>
+    <td>7857</td>
+    <td>42</td>
+    <td>0.530</td>
+    <td>63</td>
+  </tr>
+  <tr>
+    <td> 600.0 ms</td>
+    <td>0.986742</td>
+    <td>7815</td>
+    <td>55</td>
+    <td>0.694</td>
+    <td>105</td>
+  </tr>
+  <tr>
+    <td> 550.0 ms</td>
+    <td>0.979798</td>
+    <td>7760</td>
+    <td>108</td>
+    <td><mark>1.364</mark></td>
+    <td>160</td>
+  </tr>
+  <tr>
+    <td> 500.0 ms</td>
+    <td>0.966162</td>
+    <td>7652</td>
+    <td>210</td>
+    <td><mark>2.652</mark></td>
+    <td>268</td>
+  </tr>
+  <tr>
+    <td> 450.0 ms</td>
+    <td>0.939646</td>
+    <td>7442</td>
+    <td>429</td>
+    <td><mark>5.417</mark></td>
+    <td>478</td>
+  </tr>
+  <tr>
+    <td> 400.0 ms</td>
+    <td>0.885480</td>
+    <td>7013</td>
+    <td>1203</td>
+    <td><mark>15.189</mark></td>
+    <td>907</td>
+  </tr>
+  <tr>
+    <td> 350.0 ms</td>
+    <td>0.733586</td>
+    <td>5810</td>
+    <td>2802</td>
+    <td><mark>35.379</mark></td>
+    <td>2110</td>
+  </tr>
+  <tr>
+    <td> 300.0 ms</td>
+    <td>0.379798</td>
+    <td>3008</td>
+    <td>2813</td>
+    <td><mark>35.518</mark></td>
+    <td>4912</td>
+  </tr>
+  <tr>
+    <td> 250.0 ms</td>
+    <td>0.024621</td>
+    <td>195</td>
+    <td>195</td>
+    <td><mark>2.462</mark></td>
+    <td>7725</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg:  356.6 ms</td>
+    <td>sd:  78.1 ms</td>
+    <td>p50:  350.0 ms</td>
+    <td>p90:  450.0 ms</td>
+    <td>p95:  500.0 ms</td>
+    <td>p99:  650.0 ms</td>
+  </tr>
+
+</table>
+<h2>[2.CP] Percentile Response Time Distribution (HDR)</h2>
+<table style="width:800px">
   <tr>
     <th>Value</th>
     <th>Percentile</th>
@@ -22,459 +186,487 @@ mark {
     <th>AboveCount</th>
   </tr>
   <tr>
-    <td>1337.343</td>
+    <td>1452.031 ms</td>
     <td>1.000000000000</td>
-    <td>5652</td>
+    <td>7920</td>
     <td></td>
     <td>0</td>
   </tr>
   <tr>
-    <td>1337.343</td>
-    <td>0.999829101563</td>
-    <td>5652</td>
-    <td>5851.43</td>
+    <td>1452.031 ms</td>
+    <td>0.999877929688</td>
+    <td>7920</td>
+    <td>8192.00</td>
     <td>0</td>
   </tr>
   <tr>
-    <td>1072.127</td>
+    <td>1425.407 ms</td>
+    <td>0.999853515625</td>
+    <td>7919</td>
+    <td>6826.67</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>1425.407 ms</td>
+    <td>0.999829101563</td>
+    <td>7919</td>
+    <td>5851.43</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>1425.407 ms</td>
     <td>0.999804687500</td>
-    <td>5651</td>
+    <td>7919</td>
     <td>5120.00</td>
     <td>1</td>
   </tr>
   <tr>
-    <td>1072.127</td>
+    <td>1425.407 ms</td>
     <td>0.999780273438</td>
-    <td>5651</td>
+    <td>7919</td>
     <td>4551.11</td>
     <td>1</td>
   </tr>
   <tr>
-    <td>1072.127</td>
+    <td>1425.407 ms</td>
     <td>0.999755859375</td>
-    <td>5651</td>
+    <td>7919</td>
     <td>4096.00</td>
     <td>1</td>
   </tr>
   <tr>
-    <td>1072.127</td>
+    <td>1250.303 ms</td>
     <td>0.999707031250</td>
-    <td>5651</td>
+    <td>7918</td>
     <td>3413.33</td>
-    <td>1</td>
+    <td>2</td>
   </tr>
   <tr>
-    <td>1072.127</td>
+    <td>1250.303 ms</td>
     <td>0.999658203125</td>
-    <td>5651</td>
+    <td>7918</td>
     <td>2925.71</td>
-    <td>1</td>
+    <td>2</td>
   </tr>
   <tr>
-    <td>871.423</td>
+    <td>1177.599 ms</td>
     <td>0.999609375000</td>
-    <td>5650</td>
+    <td>7917</td>
     <td>2560.00</td>
-    <td>2</td>
+    <td>3</td>
   </tr>
   <tr>
-    <td>871.423</td>
+    <td>1177.599 ms</td>
     <td>0.999560546875</td>
-    <td>5650</td>
+    <td>7917</td>
     <td>2275.56</td>
-    <td>2</td>
+    <td>3</td>
   </tr>
   <tr>
-    <td>871.423</td>
+    <td>1177.599 ms</td>
     <td>0.999511718750</td>
-    <td>5650</td>
+    <td>7917</td>
     <td>2048.00</td>
-    <td>2</td>
+    <td>3</td>
   </tr>
   <tr>
-    <td>849.407</td>
+    <td>1114.111 ms</td>
     <td>0.999414062500</td>
-    <td>5649</td>
+    <td>7916</td>
     <td>1706.67</td>
-    <td>3</td>
+    <td>4</td>
   </tr>
   <tr>
-    <td>849.407</td>
+    <td>1056.767 ms</td>
     <td>0.999316406250</td>
-    <td>5649</td>
+    <td>7915</td>
     <td>1462.86</td>
-    <td>3</td>
-  </tr>
-  <tr>
-    <td>818.175</td>
-    <td>0.999218750000</td>
-    <td>5648</td>
-    <td>1280.00</td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td>818.175</td>
-    <td>0.999121093750</td>
-    <td>5648</td>
-    <td>1137.78</td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td><mark>810.495</mark></td>
-    <td><mark>0.999023437500</mark></td>
-    <td>5647</td>
-    <td>1024.00</td>
     <td>5</td>
   </tr>
   <tr>
-    <td>788.479</td>
-    <td>0.998828125000</td>
-    <td>5646</td>
-    <td>853.33</td>
+    <td>1028.095 ms</td>
+    <td>0.999218750000</td>
+    <td>7914</td>
+    <td>1280.00</td>
     <td>6</td>
   </tr>
   <tr>
-    <td>743.423</td>
-    <td>0.998632812500</td>
-    <td>5645</td>
-    <td>731.43</td>
+    <td>1028.095 ms</td>
+    <td>0.999121093750</td>
+    <td>7914</td>
+    <td>1137.78</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td><mark>1026.559 ms</mark></td>
+    <td><mark>0.999023437500</mark></td>
+    <td>7913</td>
+    <td>1024.00</td>
     <td>7</td>
   </tr>
   <tr>
-    <td>737.791</td>
-    <td>0.998437500000</td>
-    <td>5644</td>
-    <td>640.00</td>
-    <td>8</td>
-  </tr>
-  <tr>
-    <td>730.111</td>
-    <td>0.998242187500</td>
-    <td>5643</td>
-    <td>568.89</td>
+    <td>1018.367 ms</td>
+    <td>0.998828125000</td>
+    <td>7911</td>
+    <td>853.33</td>
     <td>9</td>
   </tr>
   <tr>
-    <td>673.791</td>
-    <td>0.998046875000</td>
-    <td>5641</td>
-    <td>512.00</td>
-    <td>11</td>
+    <td>981.503 ms</td>
+    <td>0.998632812500</td>
+    <td>7910</td>
+    <td>731.43</td>
+    <td>10</td>
   </tr>
   <tr>
-    <td>619.007</td>
-    <td>0.997656250000</td>
-    <td>5639</td>
-    <td>426.67</td>
+    <td>920.575 ms</td>
+    <td>0.998437500000</td>
+    <td>7908</td>
+    <td>640.00</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td>907.775 ms</td>
+    <td>0.998242187500</td>
+    <td>7907</td>
+    <td>568.89</td>
     <td>13</td>
   </tr>
   <tr>
-    <td>615.423</td>
-    <td>0.997265625000</td>
-    <td>5638</td>
-    <td>365.71</td>
-    <td>14</td>
+    <td>876.031 ms</td>
+    <td>0.998046875000</td>
+    <td>7905</td>
+    <td>512.00</td>
+    <td>15</td>
   </tr>
   <tr>
-    <td>602.111</td>
-    <td>0.996875000000</td>
-    <td>5635</td>
-    <td>320.00</td>
-    <td>17</td>
-  </tr>
-  <tr>
-    <td>588.287</td>
-    <td>0.996484375000</td>
-    <td>5634</td>
-    <td>284.44</td>
+    <td>865.279 ms</td>
+    <td>0.997656250000</td>
+    <td>7902</td>
+    <td>426.67</td>
     <td>18</td>
   </tr>
   <tr>
-    <td>582.655</td>
+    <td>845.823 ms</td>
+    <td>0.997265625000</td>
+    <td>7899</td>
+    <td>365.71</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>798.207 ms</td>
+    <td>0.996875000000</td>
+    <td>7896</td>
+    <td>320.00</td>
+    <td>24</td>
+  </tr>
+  <tr>
+    <td>758.271 ms</td>
+    <td>0.996484375000</td>
+    <td>7893</td>
+    <td>284.44</td>
+    <td>27</td>
+  </tr>
+  <tr>
+    <td>735.231 ms</td>
     <td>0.996093750000</td>
-    <td>5630</td>
+    <td>7890</td>
     <td>256.00</td>
-    <td>22</td>
-  </tr>
-  <tr>
-    <td>580.095</td>
-    <td>0.995312500000</td>
-    <td>5626</td>
-    <td>213.33</td>
-    <td>26</td>
-  </tr>
-  <tr>
-    <td>570.367</td>
-    <td>0.994531250000</td>
-    <td>5622</td>
-    <td>182.86</td>
     <td>30</td>
   </tr>
   <tr>
-    <td>554.495</td>
+    <td>716.799 ms</td>
+    <td>0.995312500000</td>
+    <td>7883</td>
+    <td>213.33</td>
+    <td>37</td>
+  </tr>
+  <tr>
+    <td>705.535 ms</td>
+    <td>0.994531250000</td>
+    <td>7877</td>
+    <td>182.86</td>
+    <td>43</td>
+  </tr>
+  <tr>
+    <td>697.855 ms</td>
     <td>0.993750000000</td>
-    <td>5617</td>
+    <td>7871</td>
     <td>160.00</td>
-    <td>35</td>
+    <td>49</td>
   </tr>
   <tr>
-    <td>536.575</td>
+    <td>684.543 ms</td>
     <td>0.992968750000</td>
-    <td>5613</td>
+    <td>7865</td>
     <td>142.22</td>
-    <td>39</td>
+    <td>55</td>
   </tr>
   <tr>
-    <td>524.287</td>
+    <td>678.911 ms</td>
     <td>0.992187500000</td>
-    <td>5608</td>
+    <td>7859</td>
     <td>128.00</td>
-    <td>44</td>
-  </tr>
-  <tr>
-    <td><mark>516.863</mark></td>
-    <td><mark>0.990625000000</mark></td>
-    <td>5600</td>
-    <td>106.67</td>
-    <td>52</td>
-  </tr>
-  <tr>
-    <td>511.487</td>
-    <td>0.989062500000</td>
-    <td>5591</td>
-    <td>91.43</td>
     <td>61</td>
   </tr>
   <tr>
-    <td>497.407</td>
+    <td><mark>657.407 ms</mark></td>
+    <td><mark>0.990625000000</mark></td>
+    <td>7846</td>
+    <td>106.67</td>
+    <td>74</td>
+  </tr>
+  <tr>
+    <td>645.631 ms</td>
+    <td>0.989062500000</td>
+    <td>7834</td>
+    <td>91.43</td>
+    <td>86</td>
+  </tr>
+  <tr>
+    <td>627.199 ms</td>
     <td>0.987500000000</td>
-    <td>5582</td>
+    <td>7821</td>
     <td>80.00</td>
-    <td>70</td>
+    <td>99</td>
   </tr>
   <tr>
-    <td>488.959</td>
+    <td>616.447 ms</td>
     <td>0.985937500000</td>
-    <td>5573</td>
+    <td>7809</td>
     <td>71.11</td>
-    <td>79</td>
+    <td>111</td>
   </tr>
   <tr>
-    <td>479.743</td>
+    <td>603.135 ms</td>
     <td>0.984375000000</td>
-    <td>5564</td>
+    <td>7797</td>
     <td>64.00</td>
-    <td>88</td>
-  </tr>
-  <tr>
-    <td>465.407</td>
-    <td>0.981250000000</td>
-    <td>5547</td>
-    <td>53.33</td>
-    <td>105</td>
-  </tr>
-  <tr>
-    <td>456.191</td>
-    <td>0.978125000000</td>
-    <td>5529</td>
-    <td>45.71</td>
     <td>123</td>
   </tr>
   <tr>
-    <td>447.999</td>
+    <td>582.655 ms</td>
+    <td>0.981250000000</td>
+    <td>7772</td>
+    <td>53.33</td>
+    <td>148</td>
+  </tr>
+  <tr>
+    <td>568.319 ms</td>
+    <td>0.978125000000</td>
+    <td>7747</td>
+    <td>45.71</td>
+    <td>173</td>
+  </tr>
+  <tr>
+    <td>552.959 ms</td>
     <td>0.975000000000</td>
-    <td>5511</td>
+    <td>7723</td>
     <td>40.00</td>
-    <td>141</td>
+    <td>197</td>
   </tr>
   <tr>
-    <td>438.783</td>
+    <td>540.159 ms</td>
     <td>0.971875000000</td>
-    <td>5494</td>
+    <td>7699</td>
     <td>35.56</td>
-    <td>158</td>
+    <td>221</td>
   </tr>
   <tr>
-    <td>432.127</td>
+    <td>531.967 ms</td>
     <td>0.968750000000</td>
-    <td>5476</td>
+    <td>7673</td>
     <td>32.00</td>
-    <td>176</td>
+    <td>247</td>
   </tr>
   <tr>
-    <td>418.047</td>
+    <td>514.815 ms</td>
     <td>0.962500000000</td>
-    <td>5441</td>
+    <td>7623</td>
     <td>26.67</td>
-    <td>211</td>
+    <td>297</td>
   </tr>
   <tr>
-    <td>412.927</td>
+    <td>500.991 ms</td>
     <td>0.956250000000</td>
-    <td>5406</td>
+    <td>7574</td>
     <td>22.86</td>
-    <td>246</td>
+    <td>346</td>
   </tr>
   <tr>
-    <td><mark>407.039</mark></td>
+    <td><mark>488.703 ms</mark></td>
     <td><mark>0.950000000000</mark></td>
-    <td>5372</td>
+    <td>7525</td>
     <td>20.00</td>
-    <td>280</td>
+    <td>395</td>
   </tr>
   <tr>
-    <td>400.895</td>
+    <td>481.279 ms</td>
     <td>0.943750000000</td>
-    <td>5336</td>
+    <td>7478</td>
     <td>17.78</td>
-    <td>316</td>
+    <td>442</td>
   </tr>
   <tr>
-    <td>395.263</td>
+    <td>472.831 ms</td>
     <td>0.937500000000</td>
-    <td>5300</td>
+    <td>7425</td>
     <td>16.00</td>
-    <td>352</td>
+    <td>495</td>
   </tr>
   <tr>
-    <td>387.071</td>
+    <td>454.655 ms</td>
     <td>0.925000000000</td>
-    <td>5232</td>
+    <td>7327</td>
     <td>13.33</td>
-    <td>420</td>
+    <td>593</td>
   </tr>
   <tr>
-    <td>379.647</td>
+    <td>445.439 ms</td>
     <td>0.912500000000</td>
-    <td>5160</td>
+    <td>7229</td>
     <td>11.43</td>
-    <td>492</td>
+    <td>691</td>
   </tr>
   <tr>
-    <td><mark>373.503</mark></td>
+    <td><mark>433.663 ms</mark></td>
     <td><mark>0.900000000000</mark></td>
-    <td>5088</td>
+    <td>7128</td>
     <td>10.00</td>
-    <td>564</td>
+    <td>792</td>
   </tr>
   <tr>
-    <td>368.895</td>
+    <td>426.239 ms</td>
     <td>0.887500000000</td>
-    <td>5017</td>
+    <td>7030</td>
     <td>8.89</td>
-    <td>635</td>
+    <td>890</td>
   </tr>
   <tr>
-    <td>364.031</td>
+    <td>418.815 ms</td>
     <td>0.875000000000</td>
-    <td>4949</td>
+    <td>6931</td>
     <td>8.00</td>
-    <td>703</td>
-  </tr>
-  <tr>
-    <td>356.095</td>
-    <td>0.850000000000</td>
-    <td>4805</td>
-    <td>6.67</td>
-    <td>847</td>
-  </tr>
-  <tr>
-    <td>350.207</td>
-    <td>0.825000000000</td>
-    <td>4663</td>
-    <td>5.71</td>
     <td>989</td>
   </tr>
   <tr>
-    <td><mark>345.599</mark></td>
+    <td>408.831 ms</td>
+    <td>0.850000000000</td>
+    <td>6736</td>
+    <td>6.67</td>
+    <td>1184</td>
+  </tr>
+  <tr>
+    <td>399.359 ms</td>
+    <td>0.825000000000</td>
+    <td>6536</td>
+    <td>5.71</td>
+    <td>1384</td>
+  </tr>
+  <tr>
+    <td><mark>390.911 ms</mark></td>
     <td><mark>0.800000000000</mark></td>
-    <td>4525</td>
+    <td>6339</td>
     <td>5.00</td>
-    <td>1127</td>
+    <td>1581</td>
   </tr>
   <tr>
-    <td>341.503</td>
+    <td>384.767 ms</td>
     <td>0.775000000000</td>
-    <td>4383</td>
+    <td>6142</td>
     <td>4.44</td>
-    <td>1269</td>
+    <td>1778</td>
   </tr>
   <tr>
-    <td>337.407</td>
+    <td>379.391 ms</td>
     <td>0.750000000000</td>
-    <td>4239</td>
+    <td>5948</td>
     <td>4.00</td>
-    <td>1413</td>
+    <td>1972</td>
   </tr>
   <tr>
-    <td>330.495</td>
+    <td>368.895 ms</td>
     <td>0.700000000000</td>
-    <td>3961</td>
+    <td>5549</td>
     <td>3.33</td>
-    <td>1691</td>
+    <td>2371</td>
   </tr>
   <tr>
-    <td>324.863</td>
+    <td>360.447 ms</td>
     <td>0.650000000000</td>
-    <td>3682</td>
+    <td>5160</td>
     <td>2.86</td>
-    <td>1970</td>
+    <td>2760</td>
   </tr>
   <tr>
-    <td>320.511</td>
+    <td>352.255 ms</td>
     <td>0.600000000000</td>
-    <td>3401</td>
+    <td>4752</td>
     <td>2.50</td>
-    <td>2251</td>
+    <td>3168</td>
   </tr>
   <tr>
-    <td>316.671</td>
+    <td>345.343 ms</td>
     <td>0.550000000000</td>
-    <td>3133</td>
+    <td>4358</td>
     <td>2.22</td>
-    <td>2519</td>
+    <td>3562</td>
   </tr>
   <tr>
-    <td><mark>312.831</mark></td>
+    <td><mark>338.943 ms</mark></td>
     <td><mark>0.500000000000</mark></td>
-    <td>2837</td>
+    <td>3966</td>
     <td>2.00</td>
-    <td>2815</td>
+    <td>3954</td>
   </tr>
   <tr>
-    <td>305.663</td>
+    <td>327.423 ms</td>
     <td>0.400000000000</td>
-    <td>2267</td>
+    <td>3183</td>
     <td>1.67</td>
-    <td>3385</td>
+    <td>4737</td>
   </tr>
   <tr>
-    <td>298.495</td>
+    <td>317.183 ms</td>
     <td>0.300000000000</td>
-    <td>1704</td>
+    <td>2392</td>
     <td>1.43</td>
-    <td>3948</td>
+    <td>5528</td>
   </tr>
   <tr>
-    <td>292.351</td>
+    <td>306.175 ms</td>
     <td>0.200000000000</td>
-    <td>1136</td>
+    <td>1587</td>
     <td>1.25</td>
-    <td>4516</td>
+    <td>6333</td>
   </tr>
   <tr>
-    <td>285.183</td>
+    <td>292.607 ms</td>
     <td>0.100000000000</td>
-    <td>584</td>
+    <td>795</td>
     <td>1.11</td>
-    <td>5068</td>
+    <td>7125</td>
   </tr>
   <tr>
-    <td>264.191</td>
+    <td>249.343 ms</td>
     <td>0.000000000000</td>
     <td>1</td>
     <td>1.00</td>
-    <td>5651</td>
+    <td>7919</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>avg: 356.722 ms</td>
+    <td>sd: 76.487 ms</td>
+    <td>p90: 433.663 ms</td>
+    <td>p95: 488.703 ms</td>
+    <td>p99: 654.335 ms</td>
   </tr>
 </table>
 </body>
