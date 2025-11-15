@@ -21,4 +21,4 @@ tulip-runtime = { module = "io.github.wfouche.tulip:tulip-runtime", version.ref 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-gradle-versions-plugin = { id = "com.github.ben-manes.versions",  version = "0.52.0" }
+gradle-versions-plugin = { id = "com.github.ben-manes.versions",  version = "0.53.0" }
