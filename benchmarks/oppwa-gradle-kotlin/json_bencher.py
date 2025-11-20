@@ -22,7 +22,9 @@ print '      "lower_value": %.1f,'%(jb["benchmarks"]["Constant TPS"]["actions"][
 print '      "upper_value": %.1f'%(jb["benchmarks"]["Constant TPS"]["actions"]["summary"]["max_rt"])
 print '    },'
 print '    "throughput": {'
-print '      "value": %.1f'%(jb["benchmarks"]["Constant TPS"]["actions"]["summary"]["aps"])
+print '      "value": %.1f'%(jb["benchmarks"]["Constant TPS"]["actions"]["summary"]["avg_aps"])
+print '      "lower_value": %.1f,'%(jb["benchmarks"]["Constant TPS"]["actions"]["summary"]["min_aps"])
+print '      "upper_value": %.1f'%(jb["benchmarks"]["Constant TPS"]["actions"]["summary"]["max_aps"])
 print '    }'
 print '  }'
 print "}"
