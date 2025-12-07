@@ -52,6 +52,13 @@ java {
     }
 }
 
+tasks.withType<JavaExec>().configureEach {
+    // Only apply this setting on Windows environments for the 'run' task
+    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        jvmArgs("-Dfile.encoding=UTF-8", "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8")
+    }
+}
+
 application {
     // Define the main class for the application.
     mainClass = "io.tulip.AppKt"

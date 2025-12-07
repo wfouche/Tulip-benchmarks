@@ -1,5 +1,7 @@
 @echo off
 
+chcp 65001 > nul
+
 set "LOG_FILE=.\app\app.log"
 
 REM Check if the file exists using the IF EXIST command.
