@@ -54,7 +54,7 @@ java {
 
 tasks.withType<JavaExec>().configureEach {
     // Only apply this setting on Windows environments for the 'run' task
-    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    if (System.getProperty("os.name").lowercase().contains("windows")) {
         jvmArgs("-Dfile.encoding=UTF-8", "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8")
     }
 }
