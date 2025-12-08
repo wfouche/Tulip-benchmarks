@@ -66,9 +66,6 @@ application {
     // Java 21 - https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector.html
     applicationDefaultJvmArgs = listOf(
 
-        // -server or -client
-        "-server",
-
         // Create a 2 GB regions of Large Pages
         //
         // $ ls /sys/kernel/mm/hugepages/
