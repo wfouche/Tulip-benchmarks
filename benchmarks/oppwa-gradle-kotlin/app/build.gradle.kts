@@ -52,13 +52,6 @@ java {
     }
 }
 
-tasks.withType<JavaExec>().configureEach {
-    // Only apply this setting on Windows environments for the 'run' task
-    if (System.getProperty("os.name").lowercase().contains("windows")) {
-        jvmArgs("-Dfile.encoding=UTF-8", "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8")
-    }
-}
-
 application {
     // Define the main class for the application.
     mainClass = "io.tulip.AppKt"
@@ -81,6 +74,11 @@ application {
         // "-XX:+UseParallelGC",
         // "-XX:+UseG1GC", "-XX:+UseDynamicNumberOfGCThreads",
         "-XX:+UseZGC", "-XX:+ZGenerational",
+
+        // UTF-8 support
+        "-Dfile.encoding=UTF-8",
+        "-Dstdout.encoding=UTF-8",
+        "-Dstderr.encoding=UTF-8",
 
         // VisualVM
         // "-Dcom.sun.management.jmxremote.port=3333",
