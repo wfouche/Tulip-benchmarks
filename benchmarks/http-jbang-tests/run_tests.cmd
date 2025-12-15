@@ -4,7 +4,7 @@ set TULIP_CLI=tulip-cli-dev@wfouche
 
 call jbang cache clear
 
-call jbang --fresh run %TULI_CLI%
+call jbang --fresh run %TULIP_CLI%
 
 set TULIP_JAVA_OPTIONS=
 
