@@ -1,4 +1,4 @@
-set TULIP_PARAMS=10000.0 http://localhost:7070 2.1.14 HTTP
+set TULIP_PARAMS=10000.0 http://localhost:7070 2.1.15 HTTP
 set TULIP_JAVA_OPTIONS=-Xms1g -Xmx2g -XX:+UseZGC -XX:+ZGenerational
 set TULIP_CLI=tulip-cli-dev@wfouche
 
