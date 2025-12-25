@@ -42,3 +42,5 @@ cd Jython
 call jbang run %TULIP_CLI% init Jython %TULIP_PARAMS%
 call run_bench.cmd
 cd ..
+
+start index.html
