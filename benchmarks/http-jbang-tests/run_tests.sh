@@ -12,7 +12,7 @@ jbang cache clear
 #
 # "-XX:+UseLargePages",
 
-export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.15 HTTP 25"
+export TULIP_PARAMS="10000.0 http://localhost:7070 2.1.15 HTTP 21"
 export TULIP_JAVA_OPTIONS="-Xms1g -Xmx2g -XX:+UseZGC -XX:+ZGenerational"
 export TULIP_CLI="tulip-cli-dev@wfouche"
 #unset TULIP_JAVA_OPTIONS
