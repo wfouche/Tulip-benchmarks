@@ -3,8 +3,8 @@
 
 # Java
 #ava=17.0.17-tem
-#ava=21.0.9-tem
-java=25.0.1-tem
+java=21.0.9-tem
+#ava=25.0.1-tem
 
 # Groovy
 groovy=5.0.3
