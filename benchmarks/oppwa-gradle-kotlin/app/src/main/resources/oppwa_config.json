@@ -50,7 +50,7 @@
         },
         "Constant TPS": {
             "enabled": true,
-            "aps_rate": 100.0,
+            "aps_rate": 50.0,
             "time": {
                 "pre_warmup_duration": 15,
                 "warmup_duration": 30,
@@ -61,8 +61,8 @@
         },
         "Rising TPS": {
             "enabled": true,
-            "aps_rate": 90.0,
-            "aps_rate_step_change": 10.0,
+            "aps_rate": 30.0,
+            "aps_rate_step_change": 20.0,
             "aps_rate_step_count": 3,
             "time": {
                 "pre_warmup_duration": 15,
