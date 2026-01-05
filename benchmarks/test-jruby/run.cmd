@@ -1,1 +1,2 @@
-jbang run@jruby main.rb
+REM jbang run@jruby main.rb
+jbang run JRuby.java main.rb
