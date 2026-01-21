@@ -52,8 +52,8 @@
             "enabled": true,
             "aps_rate": 50.0,
             "time": {
-                "pre_warmup_duration": 15,
-                "warmup_duration": 30,
+                "warmup_duration1": 15,
+                "warmup_duration2": 30,
                 "benchmark_duration": 30,
                 "benchmark_iterations": 9
             },
@@ -65,8 +65,8 @@
             "aps_rate_step_change": 20.0,
             "aps_rate_step_count": 3,
             "time": {
-                "pre_warmup_duration": 15,
-                "warmup_duration": 30,
+                "warmup_duration1": 15,
+                "warmup_duration2": 30,
                 "benchmark_duration": 30,
                 "benchmark_iterations": 3
             },

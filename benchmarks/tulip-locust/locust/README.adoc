@@ -1,0 +1,5 @@
+= Locust
+
+== JSONPlaceholder
+
+* https://www.thegreenreport.blog/articles/simple-load-testing-for-restful-apis-with-locust/simple-load-testing-for-restful-apis-with-locust.html

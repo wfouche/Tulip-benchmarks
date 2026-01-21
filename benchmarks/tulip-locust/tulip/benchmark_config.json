@@ -1,0 +1,52 @@
+{
+    "actions": {
+        "description": "jsonplaceholder.typicode.com",
+        "output_filename": "benchmark_output.json",
+        "report_filename": "benchmark_report.html",
+        "user_class": "io.tulip.APIUser",
+        "user_params": {
+            "url": "http://jsonplaceholder.typicode.com",
+            "httpVersion": "HTTP",
+            "connectTimeoutMillis": 5000,
+            "readTimeoutMillis": 10000,
+            "debug": true
+        },
+        "user_actions": {
+            "1": "GET:Get all posts",
+            "2": "POST:Create post",
+            "3": "GET:Get single post"
+        }
+    },
+    "benchmarks": {
+        "onStart": {
+            "save_stats": false,
+            "scenario_actions": [ {"id": 0} ]
+        },
+        "REST1": {
+            "enabled": true,
+            "aps_rate": 40.0,
+            "scenario_actions": [
+                {"id": 1, "weight": 3},
+                {"id": 2, "weight": 1},
+                {"id": 3, "weight": 2}
+            ],
+            "time": {
+                "warmup_duration1": 30,
+                "warmup_duration2": 10,
+                "benchmark_duration": 30,
+                "benchmark_iterations": 3
+            }
+        },
+        "onStop": {
+            "save_stats": false,
+            "scenario_actions": [ {"id": 100} ]
+        }
+    },
+    "contexts": {
+        "Context-1": {
+            "enabled": true,
+            "num_users": 128,
+            "num_threads": 16
+        }
+    }
+}
