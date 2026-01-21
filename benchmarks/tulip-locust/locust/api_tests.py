@@ -7,7 +7,7 @@ class APIUser(HttpUser):
 
     @task(3)
     def get_posts(self):
-        with self.client.get("/posts", name="Get all posts") as response:
+        with self.client.get("/posts", name="Get all posts", catch_response=True) as response:
             if response.status_code != 200:
                 print(f"Failed to get posts: {response.status_code}")
     
@@ -18,14 +18,14 @@ class APIUser(HttpUser):
             "body": "This is a test post created during load testing",
             "userId": 1
         }       
-        with self.client.post("/posts", json=payload, name="Create post") as response:
+        with self.client.post("/posts", json=payload, name="Create post", catch_response=True) as response:
             if response.status_code != 201:
                 print(f"Failed to create post: {response.status_code}")
                         
     @task(2)
     def get_single_post(self):
         post_id = 1
-        with self.client.get(f"/posts/{post_id}", name="Get single post") as response:
+        with self.client.get(f"/posts/{post_id}", name="Get single post", catch_response=True) as response:
             if response.status_code != 200:
                 print(f"Failed to get post {post_id}: {response.status_code}")
     
