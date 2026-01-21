@@ -1,1 +1,0 @@
-firefox benchmark_report.html
