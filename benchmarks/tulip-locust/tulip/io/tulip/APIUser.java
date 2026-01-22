@@ -44,7 +44,7 @@ public class APIUser extends HttpUser {
     }
 
     public boolean onStop() {
-        return true;
+        return super.onStop();
     }
 
     public Logger logger() {
