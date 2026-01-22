@@ -6,10 +6,6 @@ import org.slf4j.LoggerFactory;
 
 public class APIUser extends HttpUser {
 
-    public APIUser(int userId, int threadId) {
-        super(userId, threadId);
-    }
-
     // Action 1: GET /posts
     public boolean action1() {
         var response = get("/posts");
