@@ -2,7 +2,7 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-tulip-runtime = "2.1.16"
+tulip-runtime = "2.1.17"
 guava = "33.5.0-jre"
 junit-jupiter-engine = "5.13.0"
 kotlin = "2.3.0"

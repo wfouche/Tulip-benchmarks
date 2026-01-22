@@ -80,7 +80,7 @@ data class CompResponse(
 
 /*-------------------------------------------------------------------------*/
 
-class OppHttpUser(userId: Int, threadId: Int) : HttpUser(userId, threadId) {
+class OppHttpUser() : HttpUser() {
 
     // ----------------------------------------------------------------- //
 
