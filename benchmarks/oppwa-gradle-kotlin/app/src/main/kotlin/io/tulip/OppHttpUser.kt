@@ -89,8 +89,8 @@ class OppHttpUser() : HttpUser() {
     // ----------------------------------------------------------------- //
 
     override fun onStart(): Boolean {
+        super.onStart()
         if (userId == 0) {
-            super.onStart()
             token = getUserParamValue("token")
             entityId = getUserParamValue("entityId")
         }
@@ -227,7 +227,7 @@ class OppHttpUser() : HttpUser() {
     // ----------------------------------------------------------------- //
 
     override fun onStop(): Boolean {
-        return true
+        return super.onStop()
     }
 
     // ----------------------------------------------------------------- //
