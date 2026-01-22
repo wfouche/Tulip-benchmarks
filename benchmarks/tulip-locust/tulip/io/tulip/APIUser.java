@@ -8,19 +8,12 @@ public class APIUser extends HttpUser {
 
     public APIUser(int userId, int threadId) {
         super(userId, threadId);
-        if (userId == 0) {
-            logger.info("Java:APIUser");
-        }
-    }
-
-    public boolean onStart() {
-        return super.onStart();
     }
 
     // Action 1: GET /posts
     public boolean action1() {
-        var rsp = get("/posts");
-        return rsp.isSuccessful();
+        var response = get("/posts");
+        return response.isSuccessful();
     }
 
     // Action 2: POST /posts
@@ -32,19 +25,15 @@ public class APIUser extends HttpUser {
             "userId": 1
         }       
         """;
-        var rsp = post(payload, "/posts");
-        return rsp.isSuccessful();
+        var response = post(payload, "/posts");
+        return response.isSuccessful();
     }
 
     // Action 3: GET /posts/{id}
     public boolean action3() {
         int post_id = 1;
-        var rsp = get("/posts/{id}", post_id);
-        return rsp.isSuccessful();
-    }
-
-    public boolean onStop() {
-        return super.onStop();
+        var response = get("/posts/{id}", post_id);
+        return response.isSuccessful();
     }
 
     public Logger logger() {
