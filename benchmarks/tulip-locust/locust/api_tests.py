@@ -1,7 +1,8 @@
-from locust import HttpUser, task, between
+from locust import HttpUser, task, between, constant_throughput
 
 class APIUser(HttpUser):
-    wait_time = between(1, 5)
+    # Run with 80 users, 20 at a time activated for 2m for 40.0 RPS average
+    wait_time = constant_throughput(0.5) 
     
     host = "https://jsonplaceholder.typicode.com"
 
