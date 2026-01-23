@@ -1,10 +1,12 @@
-from locust import HttpUser, task, between, constant_throughput
+from locust import FastHttpUser, HttpUser, task, between, constant_throughput, constant
 
-class APIUser(HttpUser):
+class APIUser(FastHttpUser):
     # Run with 80 users, 20 at a time activated for 2m for 40.0 RPS average
-    wait_time = constant_throughput(0.5) 
+    #ait_time = between(1,5)
+    wait_time = constant(0)
     
-    host = "https://jsonplaceholder.typicode.com"
+    #ost = "https://jsonplaceholder.typicode.com"
+    host = "http://localhost:7070"
 
     @task(3)
     def get_posts(self):
