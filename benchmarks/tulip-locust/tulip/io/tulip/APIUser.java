@@ -8,7 +8,7 @@ public class APIUser extends HttpUser {
 
     // Action 1: GET /posts
     public boolean action1() {
-        var response = get("/posts");
+        var response = http_get("/posts");
         return response.isSuccessful();
     }
 
@@ -21,14 +21,14 @@ public class APIUser extends HttpUser {
             "userId": 1
         }       
         """;
-        var response = post(payload, "/posts");
+        var response = http_post(payload, "/posts");
         return response.isSuccessful();
     }
 
     // Action 3: GET /posts/{id}
     public boolean action3() {
         int post_id = 1;
-        var response = get("/posts/{id}", post_id);
+        var response = http_get("/posts/{id}", post_id);
         return response.isSuccessful();
     }
 
