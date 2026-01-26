@@ -1,11 +1,22 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
+
 //DEPS io.github.wfouche.tulip:tulip-runtime:2.2.0
+
 //SOURCES APIUser.java
+
 //JAVA 25
+
 //FILES ../../benchmark_config.json
 //FILES ../../logback.xml
+
+//RUNTIME_OPTIONS -XX:+IgnoreUnrecognizedVMOptions
+//RUNTIME_OPTIONS --enable-native-access=ALL-UNNAMED
+//RUNTIME_OPTIONS --sun-misc-unsafe-memory-access=allow
+
 // RUNTIME_OPTIONS -Djdk.virtualThreadScheduler.parallelism=16
+
 //NATIVE_OPTIONS -O3 --gc=G1
+
 package io.tulip;
 
 import io.github.wfouche.tulip.api.TulipApi;
