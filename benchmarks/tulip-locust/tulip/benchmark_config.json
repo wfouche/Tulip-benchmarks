@@ -46,7 +46,7 @@
         "Context-1": {
             "enabled": true,
             "num_users": 80,
-            "num_threads": 10
+            "num_threads": 0
         }
     }
 }
