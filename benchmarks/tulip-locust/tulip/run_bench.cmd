@@ -1,7 +1,7 @@
 chcp 65001 > nul
 if exist benchmark_report.html del benchmark_report.html
 set     JBANG_JAVA_OPTIONS=-XX:TieredStopAtLevel=1
-set JBANG_APP_JAVA_OPTIONS=-Xmx2g -XX:+UseZGC -XX:+ZGenerational
+set JBANG_APP_JAVA_OPTIONS=-Xmx2g -XX:+UseZGC
 call jbang run io\tulip\App.java
 @echo off
 echo.
