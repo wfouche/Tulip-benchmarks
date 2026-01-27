@@ -26,16 +26,10 @@ import io.github.wfouche.tulip.api.TulipUserFactory
 
 private class TulipCli00 : CliktCommand() {
     private val configOpt by option("--config").default("")
-    private val resultOpt by option("--result").default("")
     override fun run() {
-        if (resultOpt != "") {
-	        echo(resultOpt)
-            echo(configOpt)
-            TulipApi.createHtmlReport(resultOpt,configOpt)
-            TulipApi.createConfigReport(configOpt)
-        }
-        else if (configOpt != "") {
-            TulipApi.runTulip(configOpt)
+        if (configOpt != "") {
+            val outputFilename = TulipApi.runTulip(configOpt)
+            TulipApi.generateReport(outputFilename)
         }
     }
 }

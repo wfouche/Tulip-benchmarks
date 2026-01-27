@@ -76,6 +76,10 @@ application {
         // "-XX:+UseG1GC", "-XX:+UseDynamicNumberOfGCThreads",
         "-XX:+UseZGC", "-XX:+ZGenerational",
 
+        "-XX:+IgnoreUnrecognizedVMOptions",
+        "--enable-native-access=ALL-UNNAMED",
+        "--sun-misc-unsafe-memory-access=allow",
+
         // UTF-8 support
         "-Dfile.encoding=UTF-8",
         "-Dstdout.encoding=UTF-8",
