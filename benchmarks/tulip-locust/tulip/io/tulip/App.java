@@ -15,7 +15,7 @@
 
 // RUNTIME_OPTIONS -Djdk.virtualThreadScheduler.parallelism=16
 
-//NATIVE_OPTIONS -O3 --gc=G1
+//NATIVE_OPTIONS -O1 --gc=G1
 
 package io.tulip;
 
