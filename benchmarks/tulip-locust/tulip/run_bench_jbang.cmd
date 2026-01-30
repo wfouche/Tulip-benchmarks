@@ -1,9 +1,9 @@
 set JBANG_JAVA_OPTIONS=-XX:TieredStopAtLevel=1
-set JBANG_APP_JAVA_OPTIONS=-Xmx2g -XX:+UseZGC -XX:+ZGenerational
+set JBANG_APP_JAVA_OPTIONS=-Xmx2g -XX:+UseZGC
 jbang run ^
-   --java 21 ^
+   --java 25 ^
    --files logback.xml ^
-   --deps io.github.wfouche.tulip:tulip-runtime:2.1.17 ^
+   --deps io.github.wfouche.tulip:tulip-runtime:2.2.0 ^
    -m io.github.wfouche.tulip.api.TulipApi ^
    io\tulip\APIUser.java ^
-   benchmark_config.json
+   --config benchmark_config.json
