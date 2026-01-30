@@ -74,7 +74,7 @@ application {
 
         // "-XX:+UseParallelGC",
         // "-XX:+UseG1GC", "-XX:+UseDynamicNumberOfGCThreads",
-        "-XX:+UseZGC", "-XX:+ZGenerational",
+        "-XX:+UseZGC",
 
         "-XX:+IgnoreUnrecognizedVMOptions",
         "--enable-native-access=ALL-UNNAMED",

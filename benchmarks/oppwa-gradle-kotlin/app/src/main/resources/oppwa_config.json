@@ -82,7 +82,7 @@
         "Context-1": {
             "enabled": true,
             "num_users": 50,
-            "num_threads": 0
+            "num_tasks": 50
         }
     }
 }
