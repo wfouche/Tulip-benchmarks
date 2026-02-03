@@ -1,0 +1,1 @@
+mill mill.javalib.Dependency/showUpdates

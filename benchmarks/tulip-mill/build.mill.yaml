@@ -1,0 +1,6 @@
+extends: [KotlinModule, ktfmt.KtfmtModule]
+kotlinVersion: 2.3.0
+mvnDeps: [
+  io.ktor:ktor-server-core:3.3.2,
+  io.ktor:ktor-server-cio:3.3.2
+]
