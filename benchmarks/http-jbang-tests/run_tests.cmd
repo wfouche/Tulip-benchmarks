@@ -1,4 +1,4 @@
-set TULIP_PARAMS=10000.0 http://localhost:7070 2.2.1 HTTP_1_1 21
+set TULIP_PARAMS=10000.0 http://localhost:7070 2.2.2 HTTP_1_1 21
 set TULIP_JAVA_OPTIONS=-Xms1g -Xmx2g -XX:+UseZGC
 set TULIP_CLI=tulip-cli-dev@wfouche
 
@@ -19,7 +19,7 @@ set JAVA_OPTS=
 if not exist "Groovy" (md Groovy)
 cd Groovy
 call jbang run %TULIP_CLI% init Groovy %TULIP_PARAMS%
-REM call run_bench.cmd
+call run_bench.cmd
 cd ..
 
 set JAVA_OPTS=
