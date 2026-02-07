@@ -39,6 +39,8 @@ dependencies {
     implementation(libs.clikt.jvm)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.tulip.runtime)
+    implementtation("org.springframework.boot:spring-boot-starter-restclient:4.0.2")
+    implementation("org.slf4j:slf4j-api:2.0.17")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
