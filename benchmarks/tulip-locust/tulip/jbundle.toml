@@ -3,6 +3,6 @@
 java_version = 25
 profile = "server"
 jvm_args = ["-Xmx512m", "-XX:+UseZGC"]
-shrink = true
+shrink = false
 appcds = false
 crac = false
