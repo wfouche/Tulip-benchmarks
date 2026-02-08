@@ -39,14 +39,7 @@ dependencies {
     implementation(libs.clikt.jvm)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.tulip.runtime)
-
-    // Why does restclient not work?
-    // implementation("org.springframework.boot:spring-boot-restclient:4.0.2")
-    // implementation("org.springframework.boot:spring-boot-starter-restclient:4.0.2")
-    // Even spring-boot-starter-web:4.0.2 also does not work?
     implementation("org.springframework.boot:spring-boot-starter-web:3.5.10")
-    //implementation("org.springframework.boot:spring-boot-starter-restclient:4.0.2")
-
     implementation("org.slf4j:slf4j-api:2.0.17")
 }
 
