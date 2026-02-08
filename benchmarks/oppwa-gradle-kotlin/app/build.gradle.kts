@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.clikt.jvm)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.tulip.runtime)
+    // ? Upgrade to 4.0.2 breaks the payments benchmark (Pre-warmup do not connect?)
     implementation("org.springframework.boot:spring-boot-starter-web:3.5.10")
     implementation("org.slf4j:slf4j-api:2.0.17")
 }
