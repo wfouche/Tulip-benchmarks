@@ -6,7 +6,6 @@ import io.github.wfouche.tulip.user.HttpUser
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import org.springframework.web.client.RestClientException
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
