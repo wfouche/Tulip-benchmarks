@@ -43,11 +43,6 @@
         }
     },
     "benchmarks": {
-        "onStart": {
-            "enabled": true,
-            "save_stats": false,
-            "scenario_actions": [ {"id": 0} ]
-        },
         "Constant TPS": {
             "enabled": true,
             "aps_rate": 50.0,
@@ -71,11 +66,6 @@
                 "benchmark_iterations": 3
             },
             "scenario_workflow": "Payments"
-        },
-        "onStop": {
-            "enabled": false,
-            "save_stats": false,
-            "scenario_actions": [ {"id": 100} ]
         }
     },
     "contexts": {
