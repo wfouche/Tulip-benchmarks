@@ -7,8 +7,8 @@ import com.github.ajalt.clikt.core.*
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 
-import io.github.wfouche.tulip.api.TulipApi
-import io.github.wfouche.tulip.api.TulipUserFactory
+import io.github.tulipltt.tulip.api.TulipApi
+import io.github.tulipltt.tulip.api.TulipUserFactory
 
 /*-------------------------------------------------------------------------*/
 
