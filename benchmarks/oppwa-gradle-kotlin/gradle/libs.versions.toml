@@ -16,7 +16,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 clikt-jvm = { module = "com.github.ajalt.clikt:clikt-jvm", version.ref = "clikt-jvm"}
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin-test-junit5"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
-tulip-runtime = { module = "io.github.tulipltt.tulip:tulip-runtime", version.ref = "tulip-runtime" }
+tulip-runtime = { module = "io.github.tulipltt:tulip-runtime", version.ref = "tulip-runtime" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
