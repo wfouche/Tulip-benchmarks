@@ -2,7 +2,7 @@ package io.tulip
 
 /*-------------------------------------------------------------------------*/
 
-import io.github.wfouche.tulip.user.HttpUser
+import io.github.tulipltt.tulip.user.HttpUser
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
