@@ -2,5 +2,6 @@ extends: [KotlinModule, ktfmt.KtfmtModule]
 kotlinVersion: 2.3.10
 mvnDeps: [
   io.ktor:ktor-server-core:3.4.1,
-  io.ktor:ktor-server-cio:3.4.1
+  io.ktor:ktor-server-cio:3.4.1,
+  ch.qos.logback:logback-classic:1.5.32
 ]
