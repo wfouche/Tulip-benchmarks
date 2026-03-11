@@ -46,22 +46,22 @@
         "Constant TPS": {
             "enabled": true,
             "aps_rate": 50.0,
+            "scenario_workflow": "Payments",
             "warmup_duration1": 15,
             "warmup_duration2": 30,
             "benchmark_duration": 30,
-            "benchmark_iterations": 9,
-            "scenario_workflow": "Payments"
+            "benchmark_iterations": 9
         },
         "Rising TPS": {
             "enabled": true,
             "aps_rate": 30.0,
             "aps_rate_step_change": 20.0,
             "aps_rate_step_count": 3,
+            "scenario_workflow": "Payments",
             "warmup_duration1": 15,
             "warmup_duration2": 30,
             "benchmark_duration": 30,
-            "benchmark_iterations": 3,
-            "scenario_workflow": "Payments"
+            "benchmark_iterations": 3
         }
     },
     "contexts": {
