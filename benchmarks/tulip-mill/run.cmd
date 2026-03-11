@@ -1,1 +1,1 @@
-mill run
+.\mill run
