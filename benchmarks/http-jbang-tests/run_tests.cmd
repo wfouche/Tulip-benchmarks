@@ -1,6 +1,6 @@
 set TULIP_PARAMS=10000.0 http://localhost:7070 2.3.0 HTTP_1_1 21
 set TULIP_JAVA_OPTIONS=-Xms1g -Xmx2g -XX:+UseZGC
-set TULIP_CLI=tulip-cli-dev@wfouche
+set TULIP_CLI=tulip-cli@tulipltt
 
 call jbang cache clear
 
