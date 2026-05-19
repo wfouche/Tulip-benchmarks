@@ -2,14 +2,13 @@
 # Add key=value pairs of SDKs to use below
 
 # Java
-java=21.0.10-tem
-#java=21.0.10-amzn  # async-profiler
+java=21.0.11-tem
 
 # Groovy
-groovy=5.0.5
+groovy=5.0.6
 
 # Gradle
-gradle=9.4.1
+gradle=9.5.1
 
 # JBang
 jbang=0.138.0
@@ -18,13 +17,13 @@ jbang=0.138.0
 kotlin=2.3.21
 
 # Scala
-scalacli=1.13.0
+scalacli=1.14.0
 
 # MCS
-mcs=0.9.7
+mcs=0.10.0
 
 # Maven
-maven=3.9.14
+maven=3.9.16
 
 # VisualVM
 visualvm=2.2.1
