@@ -12,6 +12,6 @@ if exist "%LOG_FILE%" (
 
 call .\gradlew -q run --args="--config oppwa_config.json"
 
-lynx -dump -width 205 .\app\build\reports\tulip\oppwa_report.html
+REM lynx -dump -width 205 .\app\build\reports\tulip\oppwa_report.html
 
 dir app\app.log
